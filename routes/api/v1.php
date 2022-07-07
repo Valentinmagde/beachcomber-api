@@ -32,14 +32,43 @@ Route::group(
         /**
          * @OA\Post(
          *     path="/api/v1/auth/login",
-         *     description="Home page",
+         *     description="Login",
          *     @OA\Response(response="default", description="Welcome page")
          * )
          */
         $router->post('/login', 'AuthController@login');
+       
+        /**
+         * @OA\Post(
+         *     path="/api/v1/auth/register",
+         *     description="Register",
+         *     @OA\Response(response="default", description="Welcome page")
+         * )
+         */
         $router->post('/register', 'AuthController@register');
+        /**
+         * @OA\Post(
+         *     path="/api/v1/auth/logout",
+         *     description="Logout",
+         *     @OA\Response(response="default", description="Welcome page")
+         * )
+         */
         $router->post('/logout', 'AuthController@logout');
+        /**
+         * @OA\Get(
+         *     path="/api/v1/auth/me",
+         *     description="Profile",
+         *     @OA\Response(response="default", description="Welcome page")
+         * )
+         */
         $router->get('/me', 'AuthController@me');
+        /**
+         * @OA\Post(
+         *     path="/api/v1/auth/refresh",
+         *     description="Refresh token",
+         *     @OA\Response(response="default", description="Welcome page")
+         * )
+         */
         $router->post('/refresh', 'AuthController@refresh');
     }
 );
