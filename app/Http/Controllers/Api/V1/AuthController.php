@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Api\V1\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -21,10 +22,43 @@ class AuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+        * @OA\Post(
+        * path="/api/v1/auth/login",
+        * operationId="authLogin",
+        * tags={"Login"},
+        * summary="User Login",
+        * description="Login User Here",
+        *     @OA\RequestBody(
+        *         @OA\JsonContent(),
+        *         @OA\MediaType(
+        *            mediaType="multipart/form-data",
+        *            @OA\Schema(
+        *               type="object",
+        *               required={"user_email", "user_password"},
+        *               @OA\Property(property="user_email", type="email"),
+        *               @OA\Property(property="user_password", type="password")
+        *            ),
+        *        ),
+        *    ),
+        *      @OA\Response(
+        *          response=201,
+        *          description="Login Successfully",
+        *          @OA\JsonContent()
+        *       ),
+        *      @OA\Response(
+        *          response=200,
+        *          description="Login Successfully",
+        *          @OA\JsonContent()
+        *       ),
+        *      @OA\Response(
+        *          response=422,
+        *          description="Unprocessable Entity",
+        *          @OA\JsonContent()
+        *       ),
+        *      @OA\Response(response=400, description="Bad request"),
+        *      @OA\Response(response=404, description="Resource Not Found"),
+        * )
+        */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -36,8 +70,8 @@ class AuthController extends Controller
             $error = implode(",", $validator->errors()->all());
             return response()->json($error, Response::HTTP_BAD_REQUEST);
         }
-
-        if (!$token = auth()->attempt($request->only(['user_email', 'user_password']))) {
+        
+        if (!$token = auth()->attempt(['user_email' =>$request->user_email, 'password' =>$request->user_password])) {
             return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 

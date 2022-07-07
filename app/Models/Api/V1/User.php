@@ -6,9 +6,11 @@
 
 namespace App\Models\Api\V1;
 
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Api\V1\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class User
@@ -20,9 +22,9 @@ use App\Models\Api\V1\User as Authenticatable;
  *
  * @package App\Models
  */
-class User extends Authenticable implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
-	use Notifiable;
+	use HasFactory, Notifiable;
 
 	protected $table = 'users';
 	protected $primaryKey = 'user_id';
@@ -64,5 +66,9 @@ class User extends Authenticable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function getAuthPassword(){
+        return $this->user_password;
     }
 }
