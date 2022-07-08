@@ -15,11 +15,18 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /**
  * Class User
  * 
- * @property int $users_id
  * @property int $user_id
- * @property string $first_name
- * @property string $last_name
- *
+ * @property int $user_type_id
+ * @property int $user_group_id
+ * @property string $user_surname
+ * @property string $user_othername
+ * @property string $user_email
+ * @property string $user_jobtitle
+ * @property string $user_phone
+ * @property string $user_name
+ * @property string $user_password
+ * @property int $active
+ * 
  * @package App\Models
  */
 class User extends Authenticatable implements JWTSubject
@@ -47,7 +54,7 @@ class User extends Authenticatable implements JWTSubject
         'user_password',
         'active'
 	];
-
+    
 	/**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

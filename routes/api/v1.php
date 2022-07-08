@@ -42,7 +42,10 @@ Route::group(
          * @OA\Post(
          *     path="/api/v1/auth/register",
          *     description="Register",
-         *     @OA\Response(response="default", description="Welcome page")
+         *     @OA\Response(response="default", description="Welcome page"),
+         *     security={
+         *           {"bearerAuth": {}}
+         *       }
          * )
          */
         $router->post('/register', 'AuthController@register');
@@ -58,7 +61,10 @@ Route::group(
          * @OA\Get(
          *     path="/api/v1/auth/me",
          *     description="Profile",
-         *     @OA\Response(response="default", description="Welcome page")
+         *     @OA\Response(response="default", description="Welcome page"),
+         *  security={
+         *           {"bearerAuth": {}}
+         *       },
          * )
          */
         $router->get('/me', 'AuthController@me');

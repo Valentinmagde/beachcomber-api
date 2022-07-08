@@ -1,14 +1,29 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "My First API",
-        "version": "0.1"
+        "title": "Beachcomber Api Documentation",
+        "description": "How to use Beachcomber Api",
+        "contact": {
+            "name": "Beachcomber",
+            "email": "mauricia@beachcomber.com"
+        },
+        "license": {
+            "name": "Terms and Condition",
+            "url": "https://www.beachcomber-hotels.com/fr/terms-conditions"
+        },
+        "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/",
+            "description": "Local API Server"
+        }
+    ],
     "paths": {
         "/api/v1/auth/login": {
             "post": {
                 "tags": [
-                    "Login"
+                    "Authentification"
                 ],
                 "summary": "User Login",
                 "description": "Login User Here",
@@ -23,10 +38,12 @@
                                 ],
                                 "properties": {
                                     "user_email": {
-                                        "type": "email"
+                                        "type": "email",
+                                        "example": "example@beachcomber.com"
                                     },
                                     "user_password": {
-                                        "type": "password"
+                                        "type": "password",
+                                        "example": "beachcomber"
                                     }
                                 },
                                 "type": "object"
@@ -38,35 +55,81 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Login Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "200": {
                         "description": "Login Successfully",
                         "content": {
                             "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": "360"
+                                        },
+                                        "user": {
+                                            "type": "object",
+                                            "example": "{}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
                             }
                         }
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "The user email or password field is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Resource Not Found"
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Resource Not Found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -74,7 +137,7 @@
         "/api/v1/auth/register": {
             "post": {
                 "tags": [
-                    "Register"
+                    "Authentification"
                 ],
                 "summary": "User Register",
                 "description": "User Register here",
@@ -124,9 +187,9 @@
         "/api/v1/auth/me": {
             "get": {
                 "tags": [
-                    "Profile"
+                    "Authentification"
                 ],
-                "summary": "Get Profile",
+                "summary": "Get the logged in user",
                 "description": "Returns current user",
                 "operationId": "getProfile",
                 "requestBody": {
@@ -174,7 +237,7 @@
         "/api/v1/auth/logout": {
             "post": {
                 "tags": [
-                    "Logout"
+                    "Authentification"
                 ],
                 "summary": "User Logout",
                 "description": "Logout User Here",
@@ -228,7 +291,7 @@
         "/api/v1/auth/refresh": {
             "post": {
                 "tags": [
-                    "Refresh"
+                    "Authentification"
                 ],
                 "summary": "Refresh token",
                 "description": "Refresh Token Here",
@@ -280,17 +343,19 @@
             }
         }
     },
+    "tags": [
+        {
+            "name": "Authentification",
+            "description": "API Endpoints of Authentification"
+        }
+    ],
     "components": {
         "securitySchemes": {
-            "oauth2_security_example": {
-                "type": "oauth2",
-                "description": "A short description for oauth2 security scheme.",
-                "flow": "implicit",
-                "authorizationUrl": "http://example.com/auth",
-                "scopes": {
-                    "read:projects": "read your projects",
-                    "write:projects": "modify projects in your account"
-                }
+            "Bearer  (http, Bearer)": {
+                "type": "apiKey",
+                "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                "name": "Authorization",
+                "in": "header"
             }
         }
     }

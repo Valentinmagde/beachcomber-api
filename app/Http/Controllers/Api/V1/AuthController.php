@@ -25,7 +25,7 @@ class AuthController extends Controller
         * @OA\Post(
         * path="/api/v1/auth/login",
         * operationId="authLogin",
-        * tags={"Login"},
+        * tags={"Authentification"},
         * summary="User Login",
         * description="Login User Here",
         *     @OA\RequestBody(
@@ -35,29 +35,44 @@ class AuthController extends Controller
         *            @OA\Schema(
         *               type="object",
         *               required={"user_email", "user_password"},
-        *               @OA\Property(property="user_email", type="email"),
-        *               @OA\Property(property="user_password", type="password")
+        *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
+        *               @OA\Property(property="user_password", type="password", example="beachcomber")
         *            ),
         *        ),
         *    ),
         *      @OA\Response(
-        *          response=201,
-        *          description="Login Successfully",
-        *          @OA\JsonContent()
-        *       ),
-        *      @OA\Response(
         *          response=200,
         *          description="Login Successfully",
-        *          @OA\JsonContent()
+        *          @OA\JsonContent(
+        *               @OA\Property(property="access_token", type="string", example="string"),
+        *               @OA\Property(property="token_type", type="string", example="string"),
+        *               @OA\Property(property="expires_in", type="integer", example="360"),
+        *               @OA\Property(property="user", type="object", example="{}"),
+        *),
         *       ),
         *      @OA\Response(
-        *          response=422,
-        *          description="Unprocessable Entity",
-        *          @OA\JsonContent()
+        *           response=400, 
+        *           description="Bad request",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="error", type="string", example="The user email or password field is required."),
+        *           )
+        *      ),
+        *       @OA\Response(
+        *           response=401, 
+        *           description="Unauthorized",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="error", type="string", example="Unauthorized"),
+        *           )
+        *      ),
+        *      @OA\Response(
+        *           response=404, 
+        *           description="Resource Not Found",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="error", type="string", example="Resource Not Found"),
+        *           )
         *       ),
-        *      @OA\Response(response=400, description="Bad request"),
-        *      @OA\Response(response=404, description="Resource Not Found"),
         * )
+        *
         */
     public function login(Request $request)
     {
@@ -82,7 +97,7 @@ class AuthController extends Controller
         * @OA\Post(
         * path="/api/v1/auth/register",
         * operationId="Register",
-        * tags={"Register"},
+        * tags={"Authentification"},
         * summary="User Register",
         * description="User Register here",
         *     @OA\RequestBody(
@@ -111,14 +126,24 @@ class AuthController extends Controller
         * )
         */
     public function register(Request $request)
-    {}
+    {
+        $validator = Validator::make($request->all(), [
+            'user_email'     => 'required|email',
+            'user_password'      => 'required|min:6'
+        ]);
+    
+        if ($validator->fails()) {
+            $error = implode(",", $validator->errors()->all());
+            return response()->json($error, Response::HTTP_BAD_REQUEST);
+        }
+    }
 
     /**
      * @OA\Get(
      *      path="/api/v1/auth/me",
      *      operationId="getProfile",
-     *      tags={"Profile"},
-     *      summary="Get Profile",
+     *      tags={"Authentification"},
+     *      summary="Get the logged in user",
      *      description="Returns current user",
      *      @OA\RequestBody(
     *         @OA\JsonContent(),
@@ -130,6 +155,14 @@ class AuthController extends Controller
     *          response=201,
     *          description="Register Successfully",
     *          @OA\JsonContent()
+    *       ),
+    *       @OA\SecurityScheme(
+    *           securityScheme="bearerAuth",
+    *           in="header",
+    *           name="bearerAuth",
+    *           type="http",
+    *           scheme="bearer",
+    *           bearerFormat="JWT",
     *       ),
     *      @OA\Response(
     *          response=200,
@@ -144,6 +177,10 @@ class AuthController extends Controller
     *      @OA\Response(response=400, description="Bad request"),
     *      @OA\Response(response=404, description="Resource Not Found"),
      *     )
+     * 
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function me()
     {
@@ -154,7 +191,7 @@ class AuthController extends Controller
         * @OA\Post(
         * path="/api/v1/auth/logout",
         * operationId="authLogout",
-        * tags={"Logout"},
+        * tags={"Authentification"},
         * summary="User Logout",
         * description="Logout User Here",
         *     @OA\RequestBody(
@@ -184,6 +221,9 @@ class AuthController extends Controller
         *      @OA\Response(response=400, description="Bad request"),
         *      @OA\Response(response=404, description="Resource Not Found"),
         * )
+        * Log the user out (Invalidate the token).
+        *
+        * @return \Illuminate\Http\JsonResponse
         */
     public function logout()
     {
@@ -196,7 +236,7 @@ class AuthController extends Controller
         * @OA\Post(
         * path="/api/v1/auth/refresh",
         * operationId="authRefresh",
-        * tags={"Refresh"},
+        * tags={"Authentification"},
         * summary="Refresh token",
         * description="Refresh Token Here",
         *     @OA\RequestBody(
@@ -226,6 +266,9 @@ class AuthController extends Controller
         *      @OA\Response(response=400, description="Bad request"),
         *      @OA\Response(response=404, description="Resource Not Found"),
         * )
+        * Refresh a token.
+        *
+        * @return \Illuminate\Http\JsonResponse
         */
     public function refresh()
     {
@@ -241,11 +284,16 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $user = auth()->user();
+        
+        // Remove password from user response
+        unset($user->user_password);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'user' => $user
         ]);
     }
 }
