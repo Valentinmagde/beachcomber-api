@@ -1,101 +1,58 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
 use JWTAuth;
 use Exception;
-use Illuminate\Http\Request;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
-use Response;
-use Throwable;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use App\Http\Resources\ApiSendingErrorException;
+use Illuminate\Http\Response;
 
-class JwtMiddleware
+
+class JwtMiddleware extends BaseMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
-    public function handle(Request $request, Closure $next)
-    {
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-            if( !$user ) throw new Exception('User Not Found');
-
-        } catch (Exception $e) {
-
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException)
-            {
-                return response()->json([
-                    'data' => null,
-                    'status' => false,
-                    'err_' => [
-                        'message' => 'Token Invalid',
-                        'code' => 1
-                    ]
+	/**
+	 * Handle an incoming request.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Closure  $next
+	 * @return mixed
+	 */
+	public function handle($request, Closure $next)
+	{
+		try 
+        {
+		   $user = JWTAuth::parseToken()->authenticate();
+ 		} 
+        catch (Exception $e) 
+        {
+        	if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
+                return ApiSendingErrorException::sendingError([
+                    'errNo'=>6, 
+                    'errMsg'=>'Token is Invalid', 
+                    'statusCode'=>Response::HTTP_UNAUTHORIZED
+                ]);
+            }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
+                return ApiSendingErrorException::sendingError([
+                    'errNo'=>5, 
+                    'errMsg'=>'Token is Expired', 
+                    'statusCode'=>Response::HTTP_UNAUTHORIZED
+                ]);
+            }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenBlacklistedException){
+                return ApiSendingErrorException::sendingError([
+                    'errNo'=>4, 
+                    'errMsg'=>'Token is Blacklisted', 
+                    'statusCode'=>Response::HTTP_UNAUTHORIZED
+                ]);
+            }else{
+                return ApiSendingErrorException::sendingError([
+                    'errNo'=>3, 
+                    'errMsg'=>'Authorization Token not found', 
+                    'statusCode'=>Response::HTTP_UNAUTHORIZED
                 ]);
             }
-            else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException)
-            {
-                return response()->json([
-                    'data' => null,
-                    'status' => false,
-                    'err_' => [
-                        'message' => 'Token Expired',
-                        'code' =>1
-                    ]
-                ]);
-            }
-            else
-            {
-                if( $e->getMessage() === 'User Not Found') 
-                {
-                    return response()->json([
-                        "data" => null,
-                        "status" => false,
-                        "err_" => [
-                            "message" => "User Not Found",
-                            "code" => 1
-                        ]
-                    ]); 
-                }
-            
-                return response()->json([
-                    'data' => null,
-                    'status' => false,
-                    'err_' => [
-                        'message' => 'Authorization Token not found',
-                        'code' =>1
-                    ]
-                ]);
-            }
-        }
+		}
         
-        return $next($request);    
-    }
-
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->renderable(function(TokenInvalidException $e, $request){
-            return Response::json(['error'=>'Invalid token'],401);
-        });
-        $this->renderable(function (TokenExpiredException $e, $request) {
-            return Response::json(['error'=>'Token has Expired'],401);
-        });
-
-        $this->renderable(function (JWTException $e, $request) {
-            return Response::json(['error'=>'Token not parsed'],401);
-        });
-    }
+        return $next($request);
+	}
 }

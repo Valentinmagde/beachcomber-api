@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\HomeController;
+use App\Http\Resources\ApiSendingErrorException;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -78,3 +80,11 @@ Route::group(
         $router->post('/refresh', 'AuthController@refresh');
     }
 );
+
+Route::any('{any}', function(){
+    return ApiSendingErrorException::sendingError([
+        'errNo'=>7, 
+        'errMsg'=>'Resource not found', 
+        'statusCode'=>Response::HTTP_NOT_FOUND
+    ]);
+})->where('any', '.*');

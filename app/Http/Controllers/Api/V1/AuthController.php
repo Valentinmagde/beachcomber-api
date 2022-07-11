@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiSendingErrorException;
-use App\Http\Ressources\ApiSendingResponse;
+use App\Http\Resources\ApiSendingResponse;
+use App\Http\Helpers\HelperFunctions;
 use App\Models\Api\V1\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -22,7 +21,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('jwt.verify', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -105,7 +104,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return $this->respondWithToken($token);
+        return HelperFunctions::respondWithToken($token);
     }
 
     /**
@@ -160,30 +159,31 @@ class AuthController extends Controller
      *      tags={"Authentification"},
      *      summary="Get the logged in user",
      *      description="Returns current user",
-     *      @OA\RequestBody(
-    *         @OA\JsonContent(),
-    *         @OA\MediaType(
-    *            mediaType="multipart/form-data",
-    *        ),
+     *      @OA\Response(
+    *          response=200,
+    *          description="User successfully collects",
+    *          @OA\JsonContent(
+    *               @OA\Property(property="user_id", type="integer", example="number"),
+    *               @OA\Property(property="user_type_id", type="integer", example="number"),
+    *               @OA\Property(property="user_group_id", type="integer", example="number"),
+    *               @OA\Property(property="user_surname", type="string", example="string"),
+    *               @OA\Property(property="user_othername", type="string", example="string"),
+    *               @OA\Property(property="user_email", type="string", example="string"),
+    *               @OA\Property(property="user_jobtitle", type="string", example="string"),
+    *               @OA\Property(property="user_phone", type="string", example="string"),
+    *               @OA\Property(property="user_name", type="string", example="string"),
+    *               @OA\Property(property="active", type="integer", example="number")
+    *           )
+    *       ),
+    *       security={
+    *         {"bearer": {}}
+    *       }
     *    ),
     *      @OA\Response(
     *          response=201,
-    *          description="Register Successfully",
+    *          description="User successfully collects",
     *          @OA\JsonContent()
-    *       ),
-    *       @OA\SecurityScheme(
-    *           securityScheme="bearerAuth",
-    *           in="header",
-    *           name="bearerAuth",
-    *           type="http",
-    *           scheme="bearer",
-    *           bearerFormat="JWT",
-    *       ),
-    *      @OA\Response(
-    *          response=200,
-    *          description="Register Successfully",
-    *          @OA\JsonContent()
-    *       ),
+    *      ),
     *      @OA\Response(
     *          response=422,
     *          description="Unprocessable Entity",
@@ -199,7 +199,11 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return ApiSendingResponse::sendingResponse([
+            'successMsg'=>'Successful operation',
+            'data'=>HelperFunctions::unsetProperty(auth()->user(), 'user_password'), 
+            'statusCode'=>Response::HTTP_OK
+        ]);
     }
 
     /**
@@ -244,7 +248,11 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return ApiSendingResponse::sendingResponse([
+            'successMsg'=>'Successfully logged out',
+            'data'=> null, 
+            'statusCode'=>Response::HTTP_OK
+        ]);
     }
 
     /**
@@ -288,27 +296,5 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken(auth()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        $user = auth()->user();
-        
-        // Remove password from user response
-        unset($user->user_password);
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => $user
-        ]);
     }
 }

@@ -150,14 +150,21 @@ return [
                 /*
                  * Examples of Security schemes
                 */
-                
+                'bearer' => [
+                    'type' => 'http',
+                    'description' => 'Authorization token obtained from logging in.',
+                    'name' => 'Authorization',
+                    'in' => 'header',
+                    'scheme' => 'bearer',
+                ],
+                /*
                 'Bearer  (http, Bearer)' => [ // Unique name of security
                     'type' => 'apiKey', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
                     'description' => 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"',
                     'name' => 'Authorization', // The name of the header or query parameter to be used.
                     'in' => 'header', // The location of the API key. Valid values are "query" or "header".
                 ],
-                /*
+                
                 'oauth2_security_example' => [ // Unique name of security
                     'type' => 'oauth2', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
                     'description' => 'A short description for oauth2 security scheme.',
