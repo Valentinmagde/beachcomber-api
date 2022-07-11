@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiSendingErrorException;
+use App\Http\Ressources\ApiSendingResponse;
 use App\Models\Api\V1\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -78,16 +82,27 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_email'     => 'required|email',
-            'user_password'      => 'required|min:6'
+            'user_password'  => 'required|min:6'
         ]);
     
         if ($validator->fails()) {
             $error = implode(",", $validator->errors()->all());
-            return response()->json($error, Response::HTTP_BAD_REQUEST);
+            
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>1, 
+                'errMsg'=>$error, 
+                'statusCode'=>Response::HTTP_BAD_REQUEST
+            ]);
         }
         
-        if (!$token = auth()->attempt(['user_email' =>$request->user_email, 'password' =>$request->user_password])) {
-            return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        if (!$token = auth()->attempt([
+            'user_email' =>$request->user_email, 
+            'password' =>$request->user_password])) {
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>2, 
+                'errMsg'=>'Incorrect user email or password', 
+                'statusCode'=>Response::HTTP_BAD_REQUEST
+            ]);
         }
 
         return $this->respondWithToken($token);

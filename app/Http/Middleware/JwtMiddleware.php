@@ -1,60 +1,29 @@
 <?php
 
-namespace App\Exceptions;
+namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Closure;
+use JWTAuth;
+use Exception;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
+use Response;
 use Throwable;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
-class Handler extends ExceptionHandler
+class JwtMiddleware
 {
     /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array<int, class-string<Throwable>>
-     */
-    protected $dontReport = [
-        //
-    ];
-
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var array<int, string>
-     */
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
-
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
-    }
-
-    /**
-     * Render an exception into an HTTP response.
+     * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function render($request, Exception $exception)
+    public function handle(Request $request, Closure $next)
     {
-        if ($e instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], $e->getStatusCode());
-        }
-
         try {
             $user = JWTAuth::parseToken()->authenticate();
             if( !$user ) throw new Exception('User Not Found');
@@ -108,7 +77,25 @@ class Handler extends ExceptionHandler
             }
         }
         
-        return $next($request); 
-        return parent::render($request, $exception);
+        return $next($request);    
+    }
+
+    /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->renderable(function(TokenInvalidException $e, $request){
+            return Response::json(['error'=>'Invalid token'],401);
+        });
+        $this->renderable(function (TokenExpiredException $e, $request) {
+            return Response::json(['error'=>'Token has Expired'],401);
+        });
+
+        $this->renderable(function (JWTException $e, $request) {
+            return Response::json(['error'=>'Token not parsed'],401);
+        });
     }
 }
