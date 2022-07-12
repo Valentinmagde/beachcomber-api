@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Http\Resources\ApiSendingErrorException;
+use App\Http\Resources\ApiSendingResponse;
 
 /**
  * Class User
@@ -62,7 +64,16 @@ class User extends Authenticatable implements JWTSubject
      */
     public static function getById($id)
     {
-        return User::find($id);
+        try{
+            return User::find($id);
+        }catch(\Exception $e){
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>7, 
+                'errMsg'=>$e->getMessage(), 
+                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
+        }
+       
     }
     
     // ------------------------------------------------------------------------------------------
