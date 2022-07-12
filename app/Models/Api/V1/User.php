@@ -54,7 +54,39 @@ class User extends Authenticatable implements JWTSubject
         'user_password',
         'active'
 	];
+    // ------------------------------------------------------------------------------------------
+    // @ Accessors
+    // ------------------------------------------------------------------------------------------
+    /**
+     * Getter
+     */
+    public static function getById($id)
+    {
+        return User::find($id);
+    }
     
+    // ------------------------------------------------------------------------------------------
+    // @ Publics methods
+    // ------------------------------------------------------------------------------------------
+
+    /**
+     * Store user
+     * 
+     * @param $data
+     * 
+     * @return $user
+     */
+    public function store($data)
+    {
+        if($data->user_group_id)
+        {
+            $user_group_id = UserGroup::getById($data->user_group_id);
+            if(!$user_group_id)
+                $data->user_group_id = 0;
+        }
+            
+    }
+
 	/**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

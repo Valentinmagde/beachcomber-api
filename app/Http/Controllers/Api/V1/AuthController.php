@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+namespace App\Http\Models\Api\V1\User;
 use App\Http\Resources\ApiSendingErrorException;
 use App\Http\Resources\ApiSendingResponse;
 use App\Http\Helpers\HelperFunctions;
@@ -51,28 +52,31 @@ class AuthController extends Controller
         *               @OA\Property(property="token_type", type="string", example="string"),
         *               @OA\Property(property="expires_in", type="integer", example="360"),
         *               @OA\Property(property="user", type="object", example="{}"),
-        *),
+        *         ),
         *       ),
-        *      @OA\Response(
+        *       @OA\Response(
         *           response=400, 
         *           description="Bad request",
         *           @OA\JsonContent(
-        *               @OA\Property(property="error", type="string", example="The user email or password field is required."),
-        *           )
-        *      ),
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
+        *       ),
         *       @OA\Response(
         *           response=401, 
         *           description="Unauthorized",
         *           @OA\JsonContent(
-        *               @OA\Property(property="error", type="string", example="Unauthorized"),
-        *           )
-        *      ),
-        *      @OA\Response(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
+        *       ),
+        *       @OA\Response(
         *           response=404, 
         *           description="Resource Not Found",
         *           @OA\JsonContent(
-        *               @OA\Property(property="error", type="string", example="Resource Not Found"),
-        *           )
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
         *       ),
         * )
         *
@@ -143,60 +147,83 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_email'     => 'required|email',
-            'user_password'      => 'required|min:6'
+            'user_password'  => 'required|confirmed|min:6',
+            'user_surname'   => 'required',
         ]);
     
         if ($validator->fails()) {
             $error = implode(",", $validator->errors()->all());
-            return response()->json($error, Response::HTTP_BAD_REQUEST);
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>1, 
+                'errMsg'=>$error, 
+                'statusCode'=>Response::HTTP_BAD_REQUEST
+            ]);
         }
+
+        return User::store($request->all());
     }
 
     /**
-     * @OA\Get(
-     *      path="/api/v1/auth/me",
-     *      operationId="getProfile",
-     *      tags={"Authentification"},
-     *      summary="Get the logged in user",
-     *      description="Returns current user",
-     *      @OA\Response(
+    * @OA\Get(
+    *      path="/api/v1/auth/me",
+    *      operationId="getProfile",
+    *      tags={"Authentification"},
+    *      summary="Get the logged in user",
+    *      description="Returns current user",
+    *      @OA\Response(
     *          response=200,
     *          description="User successfully collects",
     *          @OA\JsonContent(
-    *               @OA\Property(property="user_id", type="integer", example="number"),
-    *               @OA\Property(property="user_type_id", type="integer", example="number"),
-    *               @OA\Property(property="user_group_id", type="integer", example="number"),
-    *               @OA\Property(property="user_surname", type="string", example="string"),
-    *               @OA\Property(property="user_othername", type="string", example="string"),
-    *               @OA\Property(property="user_email", type="string", example="string"),
-    *               @OA\Property(property="user_jobtitle", type="string", example="string"),
-    *               @OA\Property(property="user_phone", type="string", example="string"),
-    *               @OA\Property(property="user_name", type="string", example="string"),
-    *               @OA\Property(property="active", type="integer", example="number")
+    *               @OA\Property(property="successMsg", type="string", example="string"),
+    *               @OA\Property(property="data", type="object",
+    *                   @OA\Property(property="user_id", type="integer", example="number"),
+    *                   @OA\Property(property="user_type_id", type="integer", example="number"),
+    *                   @OA\Property(property="user_group_id", type="integer", example="number"),
+    *                   @OA\Property(property="user_surname", type="string", example="string"),
+    *                   @OA\Property(property="user_othername", type="string", example="string"),
+    *                   @OA\Property(property="user_email", type="string", example="string"),
+    *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
+    *                   @OA\Property(property="user_phone", type="string", example="string"),
+    *                   @OA\Property(property="user_name", type="string", example="string"),
+    *                   @OA\Property(property="active", type="integer", example="number")
+    *               ),
+    *               
     *           )
     *       ),
     *       security={
     *         {"bearer": {}}
-    *       }
-    *    ),
-    *      @OA\Response(
-    *          response=201,
-    *          description="User successfully collects",
-    *          @OA\JsonContent()
-    *      ),
-    *      @OA\Response(
-    *          response=422,
-    *          description="Unprocessable Entity",
-    *          @OA\JsonContent()
+    *       },
+    *       @OA\Response(
+    *           response=400, 
+    *           description="Bad request",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
     *       ),
-    *      @OA\Response(response=400, description="Bad request"),
-    *      @OA\Response(response=404, description="Resource Not Found"),
-     *     )
-     * 
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+    *       @OA\Response(
+    *           response=401, 
+    *           description="Unauthorized",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    *       @OA\Response(
+    *           response=404, 
+    *           description="Resource Not Found",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    *    ),
+    *      
+    * 
+    * Get the authenticated User.
+    *
+    * @return \Illuminate\Http\JsonResponse
+    */
     public function me()
     {
         return ApiSendingResponse::sendingResponse([
@@ -213,32 +240,41 @@ class AuthController extends Controller
         * tags={"Authentification"},
         * summary="User Logout",
         * description="Logout User Here",
-        *     @OA\RequestBody(
-        *         @OA\JsonContent(),
-        *         @OA\MediaType(
-        *            mediaType="multipart/form-data",
-        *            @OA\Schema(
-        *               type="object",
-        *            ),
-        *        ),
-        *    ),
-        *      @OA\Response(
-        *          response=201,
-        *          description="Logout Successfully",
-        *          @OA\JsonContent()
-        *       ),
         *      @OA\Response(
         *          response=200,
         *          description="Logout Successfully",
-        *          @OA\JsonContent()
+        *          @OA\JsonContent(
+        *               @OA\Property(property="successMsg", type="string", example="string"),
+        *               @OA\Property(property="data", type="object", example="null"),
+        *          )
         *       ),
+        *       security={
+        *         {"bearer": {}}
+        *       },
         *      @OA\Response(
-        *          response=422,
-        *          description="Unprocessable Entity",
-        *          @OA\JsonContent()
+        *           response=400, 
+        *           description="Bad request",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
         *       ),
-        *      @OA\Response(response=400, description="Bad request"),
-        *      @OA\Response(response=404, description="Resource Not Found"),
+        *       @OA\Response(
+        *           response=401, 
+        *           description="Unauthorized",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
+        *       ),
+        *       @OA\Response(
+        *           response=404, 
+        *           description="Resource Not Found",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
+        *       ),
         * )
         * Log the user out (Invalidate the token).
         *
@@ -262,32 +298,43 @@ class AuthController extends Controller
         * tags={"Authentification"},
         * summary="Refresh token",
         * description="Refresh Token Here",
-        *     @OA\RequestBody(
-        *         @OA\JsonContent(),
-        *         @OA\MediaType(
-        *            mediaType="multipart/form-data",
-        *            @OA\Schema(
-        *               type="object",
-        *            ),
-        *        ),
-        *    ),
-        *      @OA\Response(
-        *          response=201,
-        *          description="Refresh Successfully",
-        *          @OA\JsonContent()
-        *       ),
+        *       security={
+        *         {"bearer": {}}
+        *       },
         *      @OA\Response(
         *          response=200,
         *          description="Refresh Successfully",
-        *          @OA\JsonContent()
+        *          @OA\JsonContent(
+        *               @OA\Property(property="access_token", type="string", example="string"),
+        *               @OA\Property(property="token_type", type="string", example="string"),
+        *               @OA\Property(property="expires_in", type="integer", example="360"),
+        *               @OA\Property(property="user", type="object", example="{}"),
+        *         ),
         *       ),
         *      @OA\Response(
-        *          response=422,
-        *          description="Unprocessable Entity",
-        *          @OA\JsonContent()
+        *           response=400, 
+        *           description="Bad request",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
         *       ),
-        *      @OA\Response(response=400, description="Bad request"),
-        *      @OA\Response(response=404, description="Resource Not Found"),
+        *       @OA\Response(
+        *           response=401, 
+        *           description="Unauthorized",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
+        *       ),
+        *       @OA\Response(
+        *           response=404, 
+        *           description="Resource Not Found",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
+        *       ),
         * )
         * Refresh a token.
         *
@@ -295,6 +342,6 @@ class AuthController extends Controller
         */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return HelperFunctions::respondWithToken(auth()->refresh());
     }
 }
