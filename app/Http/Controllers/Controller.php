@@ -39,6 +39,10 @@ use Illuminate\Routing\Controller as BaseController;
      *     name="Authentification",
      *     description="API Endpoints of Authentification"
      * )
+     * @OA\Tag(
+     *     name="User",
+     *     description="API Endpoints of User"
+     * )
      */
 
 class Controller extends BaseController

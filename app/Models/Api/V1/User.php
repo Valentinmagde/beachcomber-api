@@ -13,6 +13,9 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Http\Resources\ApiSendingErrorException;
 use App\Http\Resources\ApiSendingResponse;
+use App\Http\Helpers\HelperFunctions;
+use Illuminate\Http\Response;
+use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class User
@@ -65,7 +68,11 @@ class User extends Authenticatable implements JWTSubject
     public static function getById($id)
     {
         try{
-            return User::find($id);
+            return ApiSendingResponse::sendingResponse([
+                'successMsg'=>'Successful operation',
+                'data'=>HelperFunctions::unsetProperty(User::find($id), 'user_password'), 
+                'statusCode'=>Response::HTTP_OK
+            ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([
                 'errNo'=>7, 
@@ -89,13 +96,22 @@ class User extends Authenticatable implements JWTSubject
      */
     public function store($data)
     {
-        if($data->user_group_id)
-        {
-            $user_group_id = UserGroup::getById($data->user_group_id);
-            if(!$user_group_id)
-                $data->user_group_id = 0;
-        }
-            
+        try{
+            $data['user_password'] = bcrypt($data['user_password']);
+            $user = User::create($data);
+
+            return ApiSendingResponse::sendingResponse([
+                'successMsg'=>'User created successfully',
+                'data'=>HelperFunctions::unsetProperty(User::find($user->user_id), 'user_password'), 
+                'statusCode'=>Response::HTTP_CREATED
+            ]);
+        }catch(\Exception $e){
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>7, 
+                'errMsg'=>$e->getMessage(), 
+                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
+        } 
     }
 
 	/**

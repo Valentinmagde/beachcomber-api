@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-namespace App\Http\Models\Api\V1\User;
 use App\Http\Resources\ApiSendingErrorException;
 use App\Http\Resources\ApiSendingResponse;
 use App\Http\Helpers\HelperFunctions;
@@ -122,33 +121,69 @@ class AuthController extends Controller
         *         @OA\JsonContent(),
         *         @OA\MediaType(
         *            mediaType="multipart/form-data",
+        *            @OA\Schema(
+        *               type="object",
+        *               required={"user_surname","user_email", "user_password", "user_password_confirmation"},
+        *               @OA\Property(property="user_surname", type="text", example="beachcomber"),
+        *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
+        *               @OA\Property(property="user_password", type="password", example="beachcomber2022"),
+        *               @OA\Property(property="user_password_confirmation", type="password", example="beachcomber2022")
+        *            ),
         *        ),
         *    ),
-        *      @OA\Response(
+        *   @OA\Response(
         *          response=201,
-        *          description="Register Successfully",
-        *          @OA\JsonContent()
+        *          description="User created successfully",
+        *          @OA\JsonContent(
+        *               @OA\Property(property="successMsg", type="string", example="string"),
+        *               @OA\Property(property="data", type="object",
+        *                   @OA\Property(property="user_id", type="integer", example="number"),
+        *                   @OA\Property(property="user_type_id", type="integer", example="number"),
+        *                   @OA\Property(property="user_group_id", type="integer", example="number"),
+        *                   @OA\Property(property="user_surname", type="string", example="string"),
+        *                   @OA\Property(property="user_othername", type="string", example="string"),
+        *                   @OA\Property(property="user_email", type="string", example="string"),
+        *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
+        *                   @OA\Property(property="user_phone", type="string", example="string"),
+        *                   @OA\Property(property="user_name", type="string", example="string"),
+        *                   @OA\Property(property="active", type="integer", example="number")
+        *               ),
+        *               
+        *           )
         *       ),
-        *      @OA\Response(
-        *          response=200,
-        *          description="Register Successfully",
-        *          @OA\JsonContent()
+        *       @OA\Response(
+        *           response=400, 
+        *           description="Bad request",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
         *       ),
-        *      @OA\Response(
-        *          response=422,
-        *          description="Unprocessable Entity",
-        *          @OA\JsonContent()
+        *       @OA\Response(
+        *           response=401, 
+        *           description="Unauthorized",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
         *       ),
-        *      @OA\Response(response=400, description="Bad request"),
-        *      @OA\Response(response=404, description="Resource Not Found"),
-        * )
+        *       @OA\Response(
+        *           response=404, 
+        *           description="Resource Not Found",
+        *           @OA\JsonContent(
+        *               @OA\Property(property="errNo", type="integer", example="number"),
+        *               @OA\Property(property="errMsg", type="string", example="string"),
+        *          )
+        *       ),
+        *    )
         */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_email'     => 'required|email',
-            'user_password'  => 'required|confirmed|min:6',
-            'user_surname'   => 'required',
+            'user_email'                  => 'required|email',
+            'user_password'               => 'required|confirmed|min:6',
+            'user_password_confirmation'  => 'required',
+            'user_surname'                => 'required',
         ]);
     
         if ($validator->fails()) {
