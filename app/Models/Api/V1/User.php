@@ -11,10 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Http\Resources\ApiSendingErrorException;
-use App\Http\Resources\ApiSendingResponse;
-use App\Http\Helpers\HelperFunctions;
-use Illuminate\Http\Response;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -42,6 +38,13 @@ class User extends Authenticatable implements JWTSubject
 	protected $primaryKey = 'user_id';
 	public $timestamps = false;
 
+    /**
+     * The attributes that should be hidden for arrays.
+     */
+    protected $hidden = [
+        'user_password'
+    ];
+
 	protected $casts = [
 		'user_id' => 'int'
 	];
@@ -59,60 +62,12 @@ class User extends Authenticatable implements JWTSubject
         'user_password',
         'active'
 	];
-    // ------------------------------------------------------------------------------------------
-    // @ Accessors
-    // ------------------------------------------------------------------------------------------
-    /**
-     * Getter
-     */
-    public static function getById($id)
-    {
-        try{
-            return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'Successful operation',
-                'data'=>HelperFunctions::unsetProperty(User::find($id), 'user_password'), 
-                'statusCode'=>Response::HTTP_OK
-            ]);
-        }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>7, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
-        }
-       
-    }
-    
-    // ------------------------------------------------------------------------------------------
-    // @ Publics methods
-    // ------------------------------------------------------------------------------------------
 
     /**
-     * Store user
-     * 
-     * @param $data
-     * 
-     * @return $user
-     */
-    public function store($data)
-    {
-        try{
-            $data['user_password'] = bcrypt($data['user_password']);
-            $user = User::create($data);
-
-            return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'User created successfully',
-                'data'=>HelperFunctions::unsetProperty(User::find($user->user_id), 'user_password'), 
-                'statusCode'=>Response::HTTP_CREATED
-            ]);
-        }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>7, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
-        } 
-    }
+     * /--------------------------------------------------------------------------------
+     * / JWT Functions
+     * /--------------------------------------------------------------------------------
+    */
 
 	/**
      * Get the identifier that will be stored in the subject claim of the JWT.

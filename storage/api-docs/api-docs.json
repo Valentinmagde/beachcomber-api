@@ -654,19 +654,1418 @@
                     }
                 ]
             }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users",
+                "description": "Returns all users",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "Users successfully collects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/group/{groupId}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users",
+                "description": "Returns all users",
+                "operationId": "showByGroupId",
+                "responses": {
+                    "200": {
+                        "description": "Users successfully collects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/{userId}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user by id",
+                "description": "Get by is here",
+                "operationId": "showById",
+                "responses": {
+                    "200": {
+                        "description": "User successfully collects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "update user by id",
+                "description": "update by is here",
+                "operationId": "update",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_email",
+                                    "user_surname"
+                                ],
+                                "properties": {
+                                    "user_type_id": {
+                                        "type": "integer",
+                                        "example": "number"
+                                    },
+                                    "user_group_id": {
+                                        "type": "integer",
+                                        "example": "number"
+                                    },
+                                    "user_surname": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_othername": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_email": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_jobtitle": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_phone": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_name": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "active": {
+                                        "type": "integer",
+                                        "example": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete user",
+                "description": "Delete user",
+                "operationId": "destroy",
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "null"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/{userId}/avatar": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Upload Avatar",
+                "description": "Upload Avatar",
+                "operationId": "uploadAvatar",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "avatar"
+                                ],
+                                "properties": {
+                                    "avatar": {
+                                        "type": "file",
+                                        "example": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Avatar uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/{userId}/group/{groupId}/assign": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Assign group to a user",
+                "description": "Assign group by is here",
+                "operationId": "assignGroup",
+                "responses": {
+                    "200": {
+                        "description": "Group assigned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/{userId}/group/{groupId}/unassign": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Unassign group to a user",
+                "description": "Unassign group by is here",
+                "operationId": "unAssignGroup",
+                "responses": {
+                    "200": {
+                        "description": "Group unassigned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/{userId}/activate": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Activate a user",
+                "description": "Activate by is here",
+                "operationId": "activate",
+                "responses": {
+                    "200": {
+                        "description": "User activated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/{userId}/deactivate": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Deactivate a user",
+                "description": "Deactivate by is here",
+                "operationId": "deactivate",
+                "responses": {
+                    "200": {
+                        "description": "User deactivated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
         }
     },
-    "tags": [
-        {
-            "name": "Authentification",
-            "description": "API Endpoints of Authentification"
-        },
-        {
-            "name": "User",
-            "description": "API Endpoints of User"
-        }
-    ],
     "components": {
+        "responses": {
+            "400": {
+                "description": "Bad request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "errNo": {
+                                    "type": "integer",
+                                    "example": "number"
+                                },
+                                "errMsg": {
+                                    "type": "string",
+                                    "example": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "description": "Unauthorized",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "errNo": {
+                                    "type": "integer",
+                                    "example": "number"
+                                },
+                                "errMsg": {
+                                    "type": "string",
+                                    "example": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "404": {
+                "description": "Resource Not Found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "errNo": {
+                                    "type": "integer",
+                                    "example": "number"
+                                },
+                                "errMsg": {
+                                    "type": "string",
+                                    "example": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "securitySchemes": {
             "bearer": {
                 "type": "http",
@@ -676,5 +2075,15 @@
                 "scheme": "bearer"
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Authentification",
+            "description": "API Endpoints of Authentification"
+        },
+        {
+            "name": "Users",
+            "description": "API Endpoints of User"
+        }
+    ]
 }

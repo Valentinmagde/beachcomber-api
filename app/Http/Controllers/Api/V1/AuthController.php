@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiSendingErrorException;
 use App\Http\Resources\ApiSendingResponse;
 use App\Http\Helpers\HelperFunctions;
-use App\Models\Api\V1\User;
+use App\Services\Api\V1\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -43,7 +43,7 @@ class AuthController extends Controller
         *            ),
         *        ),
         *    ),
-        *      @OA\Response(
+        *    @OA\Response(
         *          response=200,
         *          description="Login Successfully",
         *          @OA\JsonContent(
@@ -97,17 +97,7 @@ class AuthController extends Controller
             ]);
         }
         
-        if (!$token = auth()->attempt([
-            'user_email' =>$request->user_email, 
-            'password' =>$request->user_password])) {
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>2, 
-                'errMsg'=>'Incorrect user email or password', 
-                'statusCode'=>Response::HTTP_BAD_REQUEST
-            ]);
-        }
-
-        return HelperFunctions::respondWithToken($token);
+        return AuthService::login($request->all());
     }
 
     /**
@@ -195,7 +185,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return User::store($request->all());
+        return AuthService::register($request->all());
     }
 
     /**
@@ -261,11 +251,7 @@ class AuthController extends Controller
     */
     public function me()
     {
-        return ApiSendingResponse::sendingResponse([
-            'successMsg'=>'Successful operation',
-            'data'=>HelperFunctions::unsetProperty(auth()->user(), 'user_password'), 
-            'statusCode'=>Response::HTTP_OK
-        ]);
+        return AuthService::show();
     }
 
     /**
@@ -317,13 +303,7 @@ class AuthController extends Controller
         */
     public function logout()
     {
-        auth()->logout();
-
-        return ApiSendingResponse::sendingResponse([
-            'successMsg'=>'Successfully logged out',
-            'data'=> null, 
-            'statusCode'=>Response::HTTP_OK
-        ]);
+        return AuthService::logout();
     }
 
     /**
@@ -377,6 +357,6 @@ class AuthController extends Controller
         */
     public function refresh()
     {
-        return HelperFunctions::respondWithToken(auth()->refresh());
+        return AuthService::refresh();
     }
 }
