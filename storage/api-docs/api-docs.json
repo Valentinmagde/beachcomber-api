@@ -50,7 +50,23 @@
                             }
                         },
                         "application/json": {
-                            "schema": {}
+                            "schema": {
+                                "required": [
+                                    "user_email",
+                                    "user_password"
+                                ],
+                                "properties": {
+                                    "user_email": {
+                                        "type": "email",
+                                        "example": "example@beachcomber.com"
+                                    },
+                                    "user_password": {
+                                        "type": "password",
+                                        "example": "beachcomber"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
                 },
@@ -159,10 +175,10 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "user_surname",
                                     "user_email",
                                     "user_password",
-                                    "user_password_confirmation"
+                                    "user_password_confirmation",
+                                    "user_surname"
                                 ],
                                 "properties": {
                                     "user_surname": {
@@ -175,18 +191,44 @@
                                     },
                                     "user_password": {
                                         "type": "password",
-                                        "example": "beachcomber2022"
+                                        "example": "beachcomber"
                                     },
                                     "user_password_confirmation": {
                                         "type": "password",
-                                        "example": "beachcomber2022"
+                                        "example": "beachcomber"
                                     }
                                 },
                                 "type": "object"
                             }
                         },
                         "application/json": {
-                            "schema": {}
+                            "schema": {
+                                "required": [
+                                    "user_email",
+                                    "user_password",
+                                    "user_password_confirmation",
+                                    "user_surname"
+                                ],
+                                "properties": {
+                                    "user_surname": {
+                                        "type": "text",
+                                        "example": "beachcomber"
+                                    },
+                                    "user_email": {
+                                        "type": "email",
+                                        "example": "example@beachcomber.com"
+                                    },
+                                    "user_password": {
+                                        "type": "password",
+                                        "example": "beachcomber"
+                                    },
+                                    "user_password_confirmation": {
+                                        "type": "password",
+                                        "example": "beachcomber"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
                 },
@@ -326,6 +368,213 @@
                 "responses": {
                     "200": {
                         "description": "User successfully collects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "successMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_type_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_group_id": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                },
+                                                "user_surname": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_othername": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_email": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_jobtitle": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_phone": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                },
+                                                "active": {
+                                                    "type": "integer",
+                                                    "example": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errNo": {
+                                            "type": "integer",
+                                            "example": "number"
+                                        },
+                                        "errMsg": {
+                                            "type": "string",
+                                            "example": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/update": {
+            "put": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Update of the authenticated user",
+                "description": "User update here",
+                "operationId": "authenticatedUpdate",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_surname"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": "number"
+                                    },
+                                    "user_surname": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_othername": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_jobtitle": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_phone": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_name": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_surname",
+                                    "user_email"
+                                ],
+                                "properties": {
+                                    "user_surname": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_othername": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_jobtitle": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_phone": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_name": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -801,6 +1050,17 @@
                 "summary": "Get all users",
                 "description": "Returns all users",
                 "operationId": "showByGroupId",
+                "parameters": [
+                    {
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Users successfully collects",
@@ -939,6 +1199,17 @@
                 "summary": "Get user by id",
                 "description": "Get by is here",
                 "operationId": "showById",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User successfully collects",
@@ -1075,6 +1346,17 @@
                 "summary": "update user by id",
                 "description": "update by is here",
                 "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -1084,23 +1366,11 @@
                                     "user_surname"
                                 ],
                                 "properties": {
-                                    "user_type_id": {
-                                        "type": "integer",
-                                        "example": "number"
-                                    },
-                                    "user_group_id": {
-                                        "type": "integer",
-                                        "example": "number"
-                                    },
                                     "user_surname": {
                                         "type": "string",
                                         "example": "string"
                                     },
                                     "user_othername": {
-                                        "type": "string",
-                                        "example": "string"
-                                    },
-                                    "user_email": {
                                         "type": "string",
                                         "example": "string"
                                     },
@@ -1115,10 +1385,37 @@
                                     "user_name": {
                                         "type": "string",
                                         "example": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_surname",
+                                    "user_email"
+                                ],
+                                "properties": {
+                                    "user_surname": {
+                                        "type": "string",
+                                        "example": "string"
                                     },
-                                    "active": {
-                                        "type": "integer",
-                                        "example": "number"
+                                    "user_othername": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_jobtitle": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_phone": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "user_name": {
+                                        "type": "string",
+                                        "example": "string"
                                     }
                                 },
                                 "type": "object"
@@ -1127,7 +1424,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "User updated successfully",
                         "content": {
                             "application/json": {
@@ -1262,6 +1559,17 @@
                 "summary": "Delete user",
                 "description": "Delete user",
                 "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User deleted successfully",
@@ -1299,6 +1607,17 @@
                 "summary": "Upload Avatar",
                 "description": "Upload Avatar",
                 "operationId": "uploadAvatar",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -1458,6 +1777,26 @@
                 "summary": "Assign group to a user",
                 "description": "Assign group by is here",
                 "operationId": "assignGroup",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Group assigned successfully",
@@ -1596,6 +1935,26 @@
                 "summary": "Unassign group to a user",
                 "description": "Unassign group by is here",
                 "operationId": "unAssignGroup",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "groupId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Group unassigned successfully",
@@ -1734,6 +2093,17 @@
                 "summary": "Activate a user",
                 "description": "Activate by is here",
                 "operationId": "activate",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User activated successfully",
@@ -1872,6 +2242,17 @@
                 "summary": "Deactivate a user",
                 "description": "Deactivate by is here",
                 "operationId": "deactivate",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User deactivated successfully",

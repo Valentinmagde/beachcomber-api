@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Reliese\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class User
@@ -32,7 +33,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  */
 class User extends Authenticatable implements JWTSubject
 {
-	use HasFactory, Notifiable;
+	use HasFactory, Notifiable, SoftDeletes;
 
 	protected $table = 'users';
 	protected $primaryKey = 'user_id';

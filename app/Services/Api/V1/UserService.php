@@ -4,9 +4,12 @@ namespace App\Services\Api\V1;
 
 use Illuminate\Http\Response;
 use App\Models\Api\V1\User;
+use App\Models\Api\V1\UserGroup;
 use App\Http\Helpers\HelperFunctions;
 use App\Http\Resources\ApiSendingResponse;
 use App\Http\Resources\ApiSendingErrorException;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class UserService
 {   
@@ -24,11 +27,20 @@ class UserService
     public static function getById($id)
     {
         try{
-            return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'Successful operation',
-                'data'=>User::find($id), 
-                'statusCode'=>Response::HTTP_OK
-            ]);
+            $user = User::find($id);
+
+            if(!$user)
+                return ApiSendingErrorException::sendingError([
+                    'errNo'=>7, 
+                    'errMsg'=>'This user does not exist', 
+                    'statusCode'=>Response::HTTP_NOT_FOUND
+                ]);
+            else
+                return ApiSendingResponse::sendingResponse([
+                    'successMsg'=>'Successful operation',
+                    'data'=>User::find($id), 
+                    'statusCode'=>Response::HTTP_OK
+                ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([
                 'errNo'=>8, 
@@ -74,7 +86,7 @@ class UserService
     {
         try{
             // Get group by id
-            $group = Group::find($groupId);
+            $group = UserGroup::find($groupId);
 
             if(!$group){
                 return ApiSendingErrorException::sendingError([
@@ -84,7 +96,7 @@ class UserService
                 ]);
             }
 
-            $users = User::where('group_id', $groupId)->get();
+            $users = User::where('user_group_id', $groupId)->get();
 
             return ApiSendingResponse::sendingResponse([
                 'successMsg'=>'Successful operation',
@@ -126,10 +138,10 @@ class UserService
             // Make a file path where image will be stored [folder path + file name + file extension]
             // Store image
             // Set user profile image path in database to file full path
-            $name = str_slug($user->user_surname).'_'.time();
+            $name = str_slug($user->user_surname).'_'.time().'.'.$avatar->getClientOriginalExtension();
             $folder = '/uploads/avatars';
-            $filePath = $folder . $name . '.' . $avatar->getClientOriginalExtension();
-            $fileFullPath = Storage::disk('public')->putFile($filePath, $image);
+            // $filePath = $folder . $name . '.' . $avatar->getClientOriginalExtension();
+            $fileFullPath = Storage::disk('public')->putFileAs($folder, $avatar, $name);
             $user->avatar = $fileFullPath;
 
             // Persist user record to database
@@ -169,6 +181,12 @@ class UserService
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
+
+            // Prevent these fields from being updated
+            $user->makeHidden('user_email');
+            $user->makeHidden('user_type_id');
+            $user->makeHidden('user_group_id');
+
             //Fill user with new data
             // Persist user record to database
             $user->fill($data);
@@ -210,7 +228,7 @@ class UserService
                 ]);
             }
             else{
-                $group = Group::find($groupId);
+                $group = UserGroup::find($groupId);
 
                 if(!$group){
                     return ApiSendingErrorException::sendingError([
@@ -220,14 +238,14 @@ class UserService
                     ]);
                 }
 
-                $user->group_id = $groupId;
+                $user->user_group_id = $groupId;
                 $user->save();
             }
             
             return ApiSendingResponse::sendingResponse([
                 'successMsg'=>'Group assigned successfully',
                 'data'=>$user, 
-                'statusCode'=>Response::HTTP_CREATED
+                'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([
@@ -260,7 +278,7 @@ class UserService
                 ]);
             }
             else{
-                $group = Group::find($groupId);
+                $group = UserGroup::find($groupId);
 
                 if(!$group){
                     return ApiSendingErrorException::sendingError([
@@ -269,15 +287,23 @@ class UserService
                         'statusCode'=>Response::HTTP_NOT_FOUND
                     ]);
                 }
+                else{
+                    if($user->user_group_id != $groupId)
+                        return ApiSendingErrorException::sendingError([
+                            'errNo'=>7, 
+                            'errMsg'=>'This group is not assigned to this user', 
+                            'statusCode'=>Response::HTTP_BAD_REQUEST
+                        ]);
+                }
 
-                $user->group_id = 0;
+                $user->user_group_id = 0;
                 $user->save();
             }
             
             return ApiSendingResponse::sendingResponse([
                 'successMsg'=>'Group unassigned successfully',
                 'data'=>$user, 
-                'statusCode'=>Response::HTTP_CREATED
+                'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([
@@ -315,7 +341,7 @@ class UserService
             return ApiSendingResponse::sendingResponse([
                 'successMsg'=>'User activated successfully',
                 'data'=>$user, 
-                'statusCode'=>Response::HTTP_CREATED
+                'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([
@@ -353,7 +379,7 @@ class UserService
             return ApiSendingResponse::sendingResponse([
                 'successMsg'=>'User deactivated successfully',
                 'data'=>$user, 
-                'statusCode'=>Response::HTTP_CREATED
+                'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([
@@ -385,16 +411,16 @@ class UserService
                 ]);
             }
 
-            $user->delete;
+            $user->delete();
             
             return ApiSendingResponse::sendingResponse([
                 'successMsg'=>'User deleted successfully',
                 'data'=>null, 
-                'statusCode'=>Response::HTTP_CREATED
+                'statusCode'=>Response::HTTP_NO_CONTENT
             ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
+                'errNo'=>8,
                 'errMsg'=>$e->getMessage(), 
                 'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
             ]);

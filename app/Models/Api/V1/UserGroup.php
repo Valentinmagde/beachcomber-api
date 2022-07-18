@@ -4,7 +4,7 @@
  * Created by Reliese Model.
  */
 
-namespace App\Models;
+namespace App\Models\Api\V1;
 
 use Illuminate\Database\Eloquent\Model;
 

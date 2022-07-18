@@ -127,6 +127,12 @@ class AuthService
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
+
+            // Prevent these fields from being updated
+            $user->makeHidden('user_email');
+            $user->makeHidden('user_type_id');
+            $user->makeHidden('user_group_id');
+            
             //Fill user with new data
             // Persist user record to database
             $user->fill($data);
@@ -135,7 +141,7 @@ class AuthService
             return ApiSendingResponse::sendingResponse([
                 'successMsg'=>'User updated successfully',
                 'data'=>$user, 
-                'statusCode'=>Response::HTTP_CREATED
+                'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
             return ApiSendingErrorException::sendingError([

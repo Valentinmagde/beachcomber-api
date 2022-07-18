@@ -32,9 +32,17 @@ class AuthController extends Controller
         * summary="User Login",
         * description="Login User Here",
         *     @OA\RequestBody(
-        *         @OA\JsonContent(),
         *         @OA\MediaType(
         *            mediaType="multipart/form-data",
+        *            @OA\Schema(
+        *               type="object",
+        *               required={"user_email", "user_password"},
+        *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
+        *               @OA\Property(property="user_password", type="password", example="beachcomber")
+        *            ),
+        *        ),
+        *        @OA\MediaType(
+        *            mediaType="application/json",
         *            @OA\Schema(
         *               type="object",
         *               required={"user_email", "user_password"},
@@ -108,16 +116,26 @@ class AuthController extends Controller
         * summary="User Register",
         * description="User Register here",
         *     @OA\RequestBody(
-        *         @OA\JsonContent(),
         *         @OA\MediaType(
         *            mediaType="multipart/form-data",
         *            @OA\Schema(
         *               type="object",
-        *               required={"user_surname","user_email", "user_password", "user_password_confirmation"},
+        *               required={"user_email", "user_password", "user_password_confirmation", "user_surname"},
         *               @OA\Property(property="user_surname", type="text", example="beachcomber"),
         *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
-        *               @OA\Property(property="user_password", type="password", example="beachcomber2022"),
-        *               @OA\Property(property="user_password_confirmation", type="password", example="beachcomber2022")
+        *               @OA\Property(property="user_password", type="password", example="beachcomber"),
+        *               @OA\Property(property="user_password_confirmation", type="password", example="beachcomber"),
+        *            ),
+        *        ),
+        *        @OA\MediaType(
+        *            mediaType="application/json",
+        *            @OA\Schema(
+        *               type="object",
+        *               required={"user_email", "user_password", "user_password_confirmation", "user_surname"},
+        *               @OA\Property(property="user_surname", type="text", example="beachcomber"),
+        *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
+        *               @OA\Property(property="user_password", type="password", example="beachcomber"),
+        *               @OA\Property(property="user_password_confirmation", type="password", example="beachcomber")
         *            ),
         *        ),
         *    ),
@@ -170,7 +188,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_email'                  => 'required|email',
+            'user_email'                  => 'required|email|unique:users',
             'user_password'               => 'required|confirmed|min:6',
             'user_password_confirmation'  => 'required',
             'user_surname'                => 'required',
@@ -252,6 +270,107 @@ class AuthController extends Controller
     public function me()
     {
         return AuthService::show();
+    }
+
+    /**
+    * @OA\Put(
+    * path="/api/v1/auth/update",
+    * operationId="authenticatedUpdate",
+    * tags={"Authentification"},
+    * summary="Update of the authenticated user",
+    * description="User update here",
+    *     @OA\RequestBody(
+    *         @OA\MediaType(
+    *            mediaType="multipart/form-data",
+    *            @OA\Schema(
+    *               type="object",
+    *               required={"user_surname"},
+    *               @OA\Property(property="user_id", type="integer", example="number"),
+    *                   @OA\Property(property="user_surname", type="string", example="string"),
+    *                   @OA\Property(property="user_othername", type="string", example="string"),
+    *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
+    *                   @OA\Property(property="user_phone", type="string", example="string"),
+    *                   @OA\Property(property="user_name", type="string", example="string"),
+    *            ),
+    *        ),
+    *       @OA\MediaType(
+    *            mediaType="application/json",
+    *            @OA\Schema(
+    *               type="object",
+    *               required={"user_surname","user_email"},
+    *                   @OA\Property(property="user_surname", type="string", example="string"),
+    *                   @OA\Property(property="user_othername", type="string", example="string"),
+    *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
+    *                   @OA\Property(property="user_phone", type="string", example="string"),
+    *                   @OA\Property(property="user_name", type="string", example="string")
+    *            ),
+    *        ),
+    *    ),
+    *   @OA\Response(
+    *          response=200,
+    *          description="User updated successfully",
+    *          @OA\JsonContent(
+    *               @OA\Property(property="successMsg", type="string", example="string"),
+    *               @OA\Property(property="data", type="object",
+    *                   @OA\Property(property="user_id", type="integer", example="number"),
+    *                   @OA\Property(property="user_type_id", type="integer", example="number"),
+    *                   @OA\Property(property="user_group_id", type="integer", example="number"),
+    *                   @OA\Property(property="user_surname", type="string", example="string"),
+    *                   @OA\Property(property="user_othername", type="string", example="string"),
+    *                   @OA\Property(property="user_email", type="string", example="string"),
+    *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
+    *                   @OA\Property(property="user_phone", type="string", example="string"),
+    *                   @OA\Property(property="user_name", type="string", example="string"),
+    *                   @OA\Property(property="active", type="integer", example="number")
+    *               ),
+    *               
+    *           )
+    *       ),
+    *       security={
+    *         {"bearer": {}}
+    *       },
+    *       @OA\Response(
+    *           response=400, 
+    *           description="Bad request",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    *       @OA\Response(
+    *           response=401, 
+    *           description="Unauthorized",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    *       @OA\Response(
+    *           response=404, 
+    *           description="Resource Not Found",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    *    )
+    */
+    public function update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_surname'                => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            $error = implode(",", $validator->errors()->all());
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>1, 
+                'errMsg'=>$error, 
+                'statusCode'=>Response::HTTP_BAD_REQUEST
+            ]);
+        }
+
+        return AuthService::update($request->all());
     }
 
     /**

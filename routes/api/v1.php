@@ -55,6 +55,7 @@ Route::group(
              * )
              */
             $router->post('/register', 'AuthController@register');
+            
             /**
              * @OA\Post(
              *     path="/api/v1/auth/logout",
@@ -63,6 +64,7 @@ Route::group(
              * )
              */
             $router->post('/logout', 'AuthController@logout');
+            
             /**
              * @OA\Get(
              *     path="/api/v1/auth/me",
@@ -71,6 +73,16 @@ Route::group(
              * )
              */
             $router->get('/me', 'AuthController@me');
+            
+            /**
+             * @OA\Put(
+             *     path="/api/v1/auth/update",
+             *     description="Update user",
+             *     @OA\Response(response="default", description="User update endpoint")
+             * )
+             */
+            $router->put('/update', 'AuthController@update');
+            
             /**
              * @OA\Post(
              *     path="/api/v1/auth/refresh",

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\Api\V1\User;
 use App\Services\Api\V1\UserService;
+use App\Http\Resources\ApiSendingErrorException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -43,7 +46,6 @@ class UserController extends Controller
      *                   @OA\Property(property="user_name", type="string", example="string"),
      *                   @OA\Property(property="active", type="integer", example="number")
      *               ),
-     *               
      *           )
      *       ),
      *       security={
@@ -91,6 +93,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Get all users",
      *      description="Returns all users",
+     *       @OA\Parameter(
+     *          name="groupId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Users successfully collects",
@@ -157,6 +168,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Get user by id",
      *      description="Get by is here",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      security={
      *         {"bearer": {}}
      *       },
@@ -222,6 +242,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Upload Avatar",
      *      description="Upload Avatar",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      @OA\RequestBody(
      *         @OA\JsonContent(),
      *         @OA\MediaType(
@@ -302,7 +331,7 @@ class UserController extends Controller
             ]);
         }
 
-        return UserService::uploadAvatar($request->all(), $userId);
+        return UserService::uploadAvatar($request->file('avatar'), $userId);
     }
 
     /**
@@ -312,29 +341,46 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="update user by id",
      *      description="update by is here",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      @OA\RequestBody(
      *         @OA\MediaType(
      *            mediaType="multipart/form-data",
      *            @OA\Schema(
      *               type="object",
      *               required={"user_email", "user_surname"},
-     *                @OA\Property(property="user_type_id", type="integer", example="number"),
-     *                @OA\Property(property="user_group_id", type="integer", example="number"),
      *                @OA\Property(property="user_surname", type="string", example="string"),
      *                @OA\Property(property="user_othername", type="string", example="string"),
-     *                @OA\Property(property="user_email", type="string", example="string"),
      *                @OA\Property(property="user_jobtitle", type="string", example="string"),
      *                @OA\Property(property="user_phone", type="string", example="string"),
-     *                @OA\Property(property="user_name", type="string", example="string"),
-     *                @OA\Property(property="active", type="integer", example="number")
+     *                @OA\Property(property="user_name", type="string", example="string")
      *            ),
      *        ),
-     *    ),
+     *       @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *               type="object",
+     *               required={"user_surname","user_email"},
+     *                   @OA\Property(property="user_surname", type="string", example="string"),
+     *                   @OA\Property(property="user_othername", type="string", example="string"),
+     *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
+     *                   @OA\Property(property="user_phone", type="string", example="string"),
+     *                   @OA\Property(property="user_name", type="string", example="string")
+     *            ),
+     *        ),
+     *      ),
      *      security={
      *         {"bearer": {}}
      *       },
      *      @OA\Response(
-     *          response=200,
+     *          response=204,
      *          description="User updated successfully",
      *          @OA\JsonContent(
      *               @OA\Property(property="successMsg", type="string", example="string"),
@@ -385,6 +431,19 @@ class UserController extends Controller
      */
     public function update(Request $request, $userId)
     {
+        $validator = Validator::make($request->all(), [
+            'user_surname'                => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            $error = implode(",", $validator->errors()->all());
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>1, 
+                'errMsg'=>$error, 
+                'statusCode'=>Response::HTTP_BAD_REQUEST
+            ]);
+        }
+
         return UserService::update($request->all(), $userId);
     }
 
@@ -395,6 +454,24 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Assign group to a user",
      *      description="Assign group by is here",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="groupId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      security={
      *         {"bearer": {}}
      *       },
@@ -461,6 +538,24 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Unassign group to a user",
      *      description="Unassign group by is here",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="groupId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      security={
      *         {"bearer": {}}
      *       },
@@ -527,6 +622,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Activate a user",
      *      description="Activate by is here",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      security={
      *         {"bearer": {}}
      *       },
@@ -591,6 +695,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Deactivate a user",
      *      description="Deactivate by is here",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      security={
      *         {"bearer": {}}
      *       },
@@ -655,6 +768,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Delete user",
      *      description="Delete user",
+     *      @OA\Parameter(
+     *          name="userId",
+     *          in="path",
+     *          required=true,
+     *          example="1",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
      *      security={
      *         {"bearer": {}}
      *       },
