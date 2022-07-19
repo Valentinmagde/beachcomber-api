@@ -27,7 +27,7 @@ class AuthService
             {
                 return ApiSendingErrorException::sendingError([
                     'errNo'=>2, 
-                    'errMsg'=>'Incorrect user email or password', 
+                    'errMsg'=> __('auth.login.incorrectUserEmailOrPassword'), 
                     'statusCode'=>Response::HTTP_BAD_REQUEST
                 ]);
             }

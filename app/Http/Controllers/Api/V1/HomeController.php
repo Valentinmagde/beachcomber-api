@@ -11,7 +11,7 @@ class HomeController extends Controller
     {
         return [
             'success' => true,
-            'message' => __('index.home.message'),
+            'message' => __('home.message'),
             'data' => [
                 'service' => 'Bootstraping Laravel API',
                 'version' => '1.0',

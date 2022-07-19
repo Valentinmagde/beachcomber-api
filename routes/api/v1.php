@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Resources\ApiSendingErrorException;
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +22,25 @@ use App\Http\Resources\ApiSendingErrorException;
     *     @OA\Response(response="default", description="Welcome page")
     * )
     */
-Route::get('/', HomeController::class);
+Route::group(
+    [
+        'namespace'  => 'App\Http\Controllers\Api\V1',
+        'prefix' => '{locale}', 
+        'where' => ['locale' => '[a-zA-Z]{2}'], 
+        'middleware' => 'setlocale'
+    ],
+    function () use ($router) {
+        $router->get('/', HomeController::class);
+    }
+);
 
 Route::group(
     [
         'middleware' => 'api',
-        'namespace'  => 'App\Http\Controllers\Api\V1'
+        'namespace'  => 'App\Http\Controllers\Api\V1',
+        'prefix' => '{locale}', 
+        'where' => ['locale' => '[a-zA-Z]{2}'], 
+        'middleware' => 'setlocale'
     ],
     function () use ($router) {
 
@@ -40,7 +53,7 @@ Route::group(
         Route::group(['prefix' => 'auth'], function () use ($router) {
             /**
              * @OA\Post(
-             *     path="/api/v1/auth/login",
+             *     path="/api/v1/{lang}/auth/login",
              *     description="Login",
              *     @OA\Response(response="default", description="User login")
              * )
@@ -49,7 +62,7 @@ Route::group(
         
             /**
              * @OA\Post(
-             *     path="/api/v1/auth/register",
+             *     path="/api/v1/{lang}/auth/register",
              *     description="Register",
              *     @OA\Response(response="default", description="User register")
              * )
@@ -58,7 +71,7 @@ Route::group(
             
             /**
              * @OA\Post(
-             *     path="/api/v1/auth/logout",
+             *     path="/api/v1/{lang}/auth/logout",
              *     description="Logout",
              *     @OA\Response(response="default", description="Logout")
              * )
@@ -67,7 +80,7 @@ Route::group(
             
             /**
              * @OA\Get(
-             *     path="/api/v1/auth/me",
+             *     path="/api/v1/{lang}/auth/me",
              *     description="Profile",
              *     @OA\Response(response="default", description="Profile endpoint")
              * )
@@ -76,7 +89,7 @@ Route::group(
             
             /**
              * @OA\Put(
-             *     path="/api/v1/auth/update",
+             *     path="/api/v1/{lang}/auth/update",
              *     description="Update user",
              *     @OA\Response(response="default", description="User update endpoint")
              * )
@@ -85,7 +98,7 @@ Route::group(
             
             /**
              * @OA\Post(
-             *     path="/api/v1/auth/refresh",
+             *     path="/api/v1/{lang}/auth/refresh",
              *     description="Refresh token",
              *     @OA\Response(response="default", description="Refresh token")
              * )
@@ -104,7 +117,7 @@ Route::group(
                 
                 /**
                  * @OA\Get(
-                 *     path="/api/v1/users",
+                 *     path="/api/v1/{lang}/users",
                  *     description="Get all users",
                  *     @OA\Response(response="default", description="All users")
                  * )
@@ -113,7 +126,7 @@ Route::group(
             
                 /**
                  * @OA\Get(
-                 *     path="/api/v1/users/group/{groupId}",
+                 *     path="/api/v1/{lang}/users/group/{groupId}",
                  *     description="Get users by group id",
                  *     @OA\Response(response="default", description="Users by group id")
                  * )
@@ -125,7 +138,7 @@ Route::group(
                 
                 /**
                  * @OA\Get(
-                 *     path="/api/v1/user/{userId}",
+                 *     path="/api/v1/{lang}/user/{userId}",
                  *     description="Get user by group id",
                  *     @OA\Response(response="default", description="User by id")
                  * )
@@ -134,7 +147,7 @@ Route::group(
                 
                 /**
                  * @OA\Post(
-                 *     path="/api/v1/user/{userId}/avatar",
+                 *     path="/api/v1/{lang}/user/{userId}/avatar",
                  *     description="Update user avatar",
                  *     @OA\Response(response="default", description="User avatar")
                  * )
@@ -143,7 +156,7 @@ Route::group(
 
                 /**
                  * @OA\Put(
-                 *     path="/api/v1/user/{userId}",
+                 *     path="/api/v1/{lang}/user/{userId}",
                  *     description="Update user",
                  *     @OA\Response(response="default", description="User update")
                  * )
@@ -152,7 +165,7 @@ Route::group(
 
                 /**
                  * @OA\Patch(
-                 *     path="/api/v1/user/{userId}",
+                 *     path="/api/v1/{lang}/user/{userId}",
                  *     description="Update user",
                  *     @OA\Response(response="default", description="User update")
                  * )
@@ -161,7 +174,7 @@ Route::group(
 
                 /**
                  * @OA\Get(
-                 *     path="/api/v1/user/{userId}/group/{groupId}/assign",
+                 *     path="/api/v1/{lang}/user/{userId}/group/{groupId}/assign",
                  *     description="Assign group to a user",
                  *     @OA\Response(response="default", description="Assign group")
                  * )
@@ -170,7 +183,7 @@ Route::group(
 
                 /**
                  * @OA\Get(
-                 *     path="/api/v1/user/{userId}/group/{groupId}/unassign",
+                 *     path="/api/v1/{lang}/user/{userId}/group/{groupId}/unassign",
                  *     description="Unassign group to a user",
                  *     @OA\Response(response="default", description="Unassign group")
                  * )
@@ -179,7 +192,7 @@ Route::group(
 
                 /**
                  * @OA\Get(
-                 *     path="/api/v1/user/{userId}/activate",
+                 *     path="/api/v1/{lang}/user/{userId}/activate",
                  *     description="Activate a user",
                  *     @OA\Response(response="default", description="Activate user")
                  * )
@@ -188,7 +201,7 @@ Route::group(
 
                 /**
                  * @OA\Get(
-                 *     path="/api/v1/user/{userId}/deactivate",
+                 *     path="/api/v1/{lang}/user/{userId}/deactivate",
                  *     description="Deactivate a user",
                  *     @OA\Response(response="default", description="Deactivate user")
                  * )
@@ -197,7 +210,7 @@ Route::group(
 
                 /**
                  * @OA\Delete(
-                 *     path="/api/v1/user/{userId}",
+                 *     path="/api/v1/{lang}/user/{userId}",
                  *     description="Delete a user",
                  *     @OA\Response(response="default", description="Delete user")
                  * )

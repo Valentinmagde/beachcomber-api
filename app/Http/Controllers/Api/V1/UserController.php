@@ -24,7 +24,7 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/v1/users",
+     *      path="/api/v1/{lang}/users",
      *      operationId="index",
      *      tags={"Users"},
      *      summary="Get all users",
@@ -88,7 +88,7 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/v1/users/group/{groupId}",
+     *      path="/api/v1/{lang}/users/group/{groupId}",
      *      operationId="showByGroupId",
      *      tags={"Users"},
      *      summary="Get all users",
@@ -163,7 +163,7 @@ class UserController extends Controller
 
     /**
      *   @OA\Get(
-     *      path="/api/v1/user/{userId}",
+     *      path="/api/v1/{lang}/user/{userId}",
      *      operationId="showById",
      *      tags={"Users"},
      *      summary="Get user by id",
@@ -237,7 +237,7 @@ class UserController extends Controller
 
      /**
      *   @OA\Post(
-     *      path="/api/v1/user/{userId}/avatar",
+     *      path="/api/v1/{lang}/user/{userId}/avatar",
      *      operationId="uploadAvatar",
      *      tags={"Users"},
      *      summary="Upload Avatar",
@@ -336,7 +336,7 @@ class UserController extends Controller
 
     /**
      *   @OA\Put(
-     *      path="/api/v1/user/{userId}",
+     *      path="/api/v1/{lang}/user/{userId}",
      *      operationId="update",
      *      tags={"Users"},
      *      summary="update user by id",
@@ -449,7 +449,7 @@ class UserController extends Controller
 
     /**
      *   @OA\Get(
-     *      path="/api/v1/user/{userId}/group/{groupId}/assign",
+     *      path="/api/v1/{lang}/user/{userId}/group/{groupId}/assign",
      *      operationId="assignGroup",
      *      tags={"Users"},
      *      summary="Assign group to a user",
@@ -533,7 +533,7 @@ class UserController extends Controller
 
      /**
      *   @OA\Get(
-     *      path="/api/v1/user/{userId}/group/{groupId}/unassign",
+     *      path="/api/v1/{lang}/user/{userId}/group/{groupId}/unassign",
      *      operationId="unAssignGroup",
      *      tags={"Users"},
      *      summary="Unassign group to a user",
@@ -617,7 +617,7 @@ class UserController extends Controller
 
      /**
      *   @OA\Get(
-     *      path="/api/v1/user/{userId}/activate",
+     *      path="/api/v1/{lang}/user/{userId}/activate",
      *      operationId="activate",
      *      tags={"Users"},
      *      summary="Activate a user",
@@ -690,7 +690,7 @@ class UserController extends Controller
 
      /**
      *   @OA\Get(
-     *      path="/api/v1/user/{userId}/deactivate",
+     *      path="/api/v1/{lang}/user/{userId}/deactivate",
      *      operationId="deactivate",
      *      tags={"Users"},
      *      summary="Deactivate a user",
@@ -763,7 +763,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/api/v1/user/{userId}",
+     *      path="/api/v1/{lang}/user/{userId}",
      *      operationId="destroy",
      *      tags={"Users"},
      *      summary="Delete user",

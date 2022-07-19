@@ -25,69 +25,78 @@ class AuthController extends Controller
     }
 
     /**
-        * @OA\Post(
-        * path="/api/v1/auth/login",
-        * operationId="authLogin",
-        * tags={"Authentification"},
-        * summary="User Login",
-        * description="Login User Here",
-        *     @OA\RequestBody(
-        *         @OA\MediaType(
-        *            mediaType="multipart/form-data",
-        *            @OA\Schema(
-        *               type="object",
-        *               required={"user_email", "user_password"},
-        *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
-        *               @OA\Property(property="user_password", type="password", example="beachcomber")
-        *            ),
-        *        ),
-        *        @OA\MediaType(
-        *            mediaType="application/json",
-        *            @OA\Schema(
-        *               type="object",
-        *               required={"user_email", "user_password"},
-        *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
-        *               @OA\Property(property="user_password", type="password", example="beachcomber")
-        *            ),
-        *        ),
-        *    ),
-        *    @OA\Response(
-        *          response=200,
-        *          description="Login Successfully",
-        *          @OA\JsonContent(
-        *               @OA\Property(property="access_token", type="string", example="string"),
-        *               @OA\Property(property="token_type", type="string", example="string"),
-        *               @OA\Property(property="expires_in", type="integer", example="360"),
-        *               @OA\Property(property="user", type="object", example="{}"),
-        *         ),
-        *       ),
-        *       @OA\Response(
-        *           response=400, 
-        *           description="Bad request",
-        *           @OA\JsonContent(
-        *               @OA\Property(property="errNo", type="integer", example="number"),
-        *               @OA\Property(property="errMsg", type="string", example="string"),
-        *          )
-        *       ),
-        *       @OA\Response(
-        *           response=401, 
-        *           description="Unauthorized",
-        *           @OA\JsonContent(
-        *               @OA\Property(property="errNo", type="integer", example="number"),
-        *               @OA\Property(property="errMsg", type="string", example="string"),
-        *          )
-        *       ),
-        *       @OA\Response(
-        *           response=404, 
-        *           description="Resource Not Found",
-        *           @OA\JsonContent(
-        *               @OA\Property(property="errNo", type="integer", example="number"),
-        *               @OA\Property(property="errMsg", type="string", example="string"),
-        *          )
-        *       ),
-        * )
-        *
-        */
+    * @OA\Post(
+    * path="/api/v1/{lang}/auth/login",
+    * operationId="authLogin",
+    * tags={"Authentification"},
+    * summary="User Login",
+    * description="Login User Here",
+    *   @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+    *     @OA\RequestBody(
+    *         @OA\MediaType(
+    *            mediaType="multipart/form-data",
+    *            @OA\Schema(
+    *               type="object",
+    *               required={"user_email", "user_password"},
+    *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
+    *               @OA\Property(property="user_password", type="password", example="beachcomber")
+    *            ),
+    *        ),
+    *        @OA\MediaType(
+    *            mediaType="application/json",
+    *            @OA\Schema(
+    *               type="object",
+    *               required={"user_email", "user_password"},
+    *               @OA\Property(property="user_email", type="email", example="example@beachcomber.com"),
+    *               @OA\Property(property="user_password", type="password", example="beachcomber")
+    *            ),
+    *        ),
+    *    ),
+    *    @OA\Response(
+    *          response=200,
+    *          description="Login Successfully",
+    *          @OA\JsonContent(
+    *               @OA\Property(property="access_token", type="string", example="string"),
+    *               @OA\Property(property="token_type", type="string", example="string"),
+    *               @OA\Property(property="expires_in", type="integer", example="360"),
+    *               @OA\Property(property="user", type="object", example="{}"),
+    *         ),
+    *       ),
+    *       @OA\Response(
+    *           response=400, 
+    *           description="Bad request",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    *       @OA\Response(
+    *           response=401, 
+    *           description="Unauthorized",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    *       @OA\Response(
+    *           response=404, 
+    *           description="Resource Not Found",
+    *           @OA\JsonContent(
+    *               @OA\Property(property="errNo", type="integer", example="number"),
+    *               @OA\Property(property="errMsg", type="string", example="string"),
+    *          )
+    *       ),
+    * )
+    *
+    */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -110,7 +119,7 @@ class AuthController extends Controller
 
     /**
         * @OA\Post(
-        * path="/api/v1/auth/register",
+        * path="/api/v1/{lang}/auth/register",
         * operationId="Register",
         * tags={"Authentification"},
         * summary="User Register",
@@ -208,7 +217,7 @@ class AuthController extends Controller
 
     /**
     * @OA\Get(
-    *      path="/api/v1/auth/me",
+    *      path="/api/v1/{lang}/auth/me",
     *      operationId="getProfile",
     *      tags={"Authentification"},
     *      summary="Get the logged in user",
@@ -274,7 +283,7 @@ class AuthController extends Controller
 
     /**
     * @OA\Put(
-    * path="/api/v1/auth/update",
+    * path="/api/v1/{lang}/auth/update",
     * operationId="authenticatedUpdate",
     * tags={"Authentification"},
     * summary="Update of the authenticated user",
@@ -375,7 +384,7 @@ class AuthController extends Controller
 
     /**
         * @OA\Post(
-        * path="/api/v1/auth/logout",
+        * path="/api/v1/{lang}/auth/logout",
         * operationId="authLogout",
         * tags={"Authentification"},
         * summary="User Logout",
@@ -427,7 +436,7 @@ class AuthController extends Controller
 
     /**
         * @OA\Post(
-        * path="/api/v1/auth/refresh",
+        * path="/api/v1/{lang}/auth/refresh",
         * operationId="authRefresh",
         * tags={"Authentification"},
         * summary="Refresh token",
