@@ -181,6 +181,17 @@
                 "summary": "User Register",
                 "description": "User Register here",
                 "operationId": "Register",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "en"
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -376,6 +387,17 @@
                 "summary": "Get the logged in user",
                 "description": "Returns current user",
                 "operationId": "getProfile",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "en"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User successfully collects",
@@ -514,6 +536,17 @@
                 "summary": "Update of the authenticated user",
                 "description": "User update here",
                 "operationId": "authenticatedUpdate",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "en"
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -553,8 +586,7 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "user_surname",
-                                    "user_email"
+                                    "user_surname"
                                 ],
                                 "properties": {
                                     "user_surname": {
@@ -721,6 +753,17 @@
                 "summary": "User Logout",
                 "description": "Logout User Here",
                 "operationId": "authLogout",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "en"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Logout Successfully",
@@ -818,6 +861,17 @@
                 "summary": "Refresh token",
                 "description": "Refresh Token Here",
                 "operationId": "authRefresh",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "en"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Refresh Successfully",

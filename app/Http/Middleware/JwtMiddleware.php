@@ -7,6 +7,7 @@ use Exception;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 use App\Http\Resources\ApiSendingErrorException;
 use Illuminate\Http\Response;
+use App\Http\Resources\ApiErrorNumbers;
 
 
 class JwtMiddleware extends BaseMiddleware
@@ -28,26 +29,26 @@ class JwtMiddleware extends BaseMiddleware
         {
         	if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>6, 
-                    'errMsg'=>'Token is Invalid', 
+                    'errNo'=> ApiErrorNumbers::$invalid_token, 
+                    'errMsg'=> __('auth.invalidToken'), 
                     'statusCode'=>Response::HTTP_UNAUTHORIZED
                 ]);
             }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>5, 
-                    'errMsg'=>'Token is Expired', 
+                    'errNo'=>ApiErrorNumbers::$expired_token, 
+                    'errMsg'=> __('auth.expiredToken'), 
                     'statusCode'=>Response::HTTP_UNAUTHORIZED
                 ]);
             }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenBlacklistedException){
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>4, 
-                    'errMsg'=>'Token is Blacklisted', 
+                    'errNo'=>ApiErrorNumbers::$blacklisted_token, 
+                    'errMsg'=> __('auth.blacklistedToken'), 
                     'statusCode'=>Response::HTTP_UNAUTHORIZED
                 ]);
             }else{
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>3, 
-                    'errMsg'=>'Authorization Token not found', 
+                    'errNo'=>ApiErrorNumbers::$token_not_found,
+                    'errMsg'=> __('auth.tokenNotFound'), 
                     'statusCode'=>Response::HTTP_UNAUTHORIZED
                 ]);
             }

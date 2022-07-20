@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ApiErrorNumbers;
 
 class AuthController extends Controller
 {
@@ -108,7 +109,7 @@ class AuthController extends Controller
             $error = implode(",", $validator->errors()->all());
             
             return ApiSendingErrorException::sendingError([
-                'errNo'=>1, 
+                'errNo'=>ApiErrorNumbers::$validator, 
                 'errMsg'=>$error, 
                 'statusCode'=>Response::HTTP_BAD_REQUEST
             ]);
@@ -124,6 +125,15 @@ class AuthController extends Controller
         * tags={"Authentification"},
         * summary="User Register",
         * description="User Register here",
+        *   @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
         *     @OA\RequestBody(
         *         @OA\MediaType(
         *            mediaType="multipart/form-data",
@@ -206,7 +216,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             $error = implode(",", $validator->errors()->all());
             return ApiSendingErrorException::sendingError([
-                'errNo'=>1, 
+                'errNo'=>ApiErrorNumbers::$validator, 
                 'errMsg'=>$error, 
                 'statusCode'=>Response::HTTP_BAD_REQUEST
             ]);
@@ -222,6 +232,15 @@ class AuthController extends Controller
     *      tags={"Authentification"},
     *      summary="Get the logged in user",
     *      description="Returns current user",
+     *   @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
     *      @OA\Response(
     *          response=200,
     *          description="User successfully collects",
@@ -288,6 +307,15 @@ class AuthController extends Controller
     * tags={"Authentification"},
     * summary="Update of the authenticated user",
     * description="User update here",
+     *   @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
     *     @OA\RequestBody(
     *         @OA\MediaType(
     *            mediaType="multipart/form-data",
@@ -306,7 +334,7 @@ class AuthController extends Controller
     *            mediaType="application/json",
     *            @OA\Schema(
     *               type="object",
-    *               required={"user_surname","user_email"},
+    *               required={"user_surname"},
     *                   @OA\Property(property="user_surname", type="string", example="string"),
     *                   @OA\Property(property="user_othername", type="string", example="string"),
     *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
@@ -367,13 +395,13 @@ class AuthController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_surname'                => 'required',
+            'user_surname' => 'required',
         ]);
     
         if ($validator->fails()) {
             $error = implode(",", $validator->errors()->all());
             return ApiSendingErrorException::sendingError([
-                'errNo'=>1, 
+                'errNo'=>ApiErrorNumbers::$validator, 
                 'errMsg'=>$error, 
                 'statusCode'=>Response::HTTP_BAD_REQUEST
             ]);
@@ -389,6 +417,15 @@ class AuthController extends Controller
         * tags={"Authentification"},
         * summary="User Logout",
         * description="Logout User Here",
+        *   @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
         *      @OA\Response(
         *          response=200,
         *          description="Logout Successfully",
@@ -441,6 +478,15 @@ class AuthController extends Controller
         * tags={"Authentification"},
         * summary="Refresh token",
         * description="Refresh Token Here",
+        *   @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
         *       security={
         *         {"bearer": {}}
         *       },

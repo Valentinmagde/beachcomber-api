@@ -7,6 +7,7 @@ use App\Models\Api\V1\User;
 use App\Http\Helpers\HelperFunctions;
 use App\Http\Resources\ApiSendingResponse;
 use App\Http\Resources\ApiSendingErrorException;
+use App\Http\Resources\ApiErrorNumbers;
 
 class AuthService
 {
@@ -26,7 +27,7 @@ class AuthService
                 ]))
             {
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>2, 
+                    'errNo'=>ApiErrorNumbers::$bad_login_credentials,
                     'errMsg'=> __('auth.login.incorrectUserEmailOrPassword'), 
                     'statusCode'=>Response::HTTP_BAD_REQUEST
                 ]);
@@ -47,13 +48,21 @@ class AuthService
      */
     public function logout()
     {
-        auth()->logout();
+        try{
+            auth()->logout();
 
-        return ApiSendingResponse::sendingResponse([
-            'successMsg'=>'Successfully logged out',
-            'data'=> null, 
-            'statusCode'=>Response::HTTP_OK
-        ]);
+            return ApiSendingResponse::sendingResponse([
+                'successMsg'=> __('auth.logout.successfullyLoggedOut'),
+                'data'=> null, 
+                'statusCode'=>Response::HTTP_OK
+            ]);
+        }catch(\Exception $e){
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>8, 
+                'errMsg'=>$e->getMessage(), 
+                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
+        } 
     }
 
     /**
@@ -63,7 +72,15 @@ class AuthService
      */
     public function refresh()
     {
-        return HelperFunctions::respondWithToken(auth()->refresh());
+        try{
+            return HelperFunctions::respondWithToken(auth()->refresh());
+        }catch(\Exception $e){
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>8, 
+                'errMsg'=>$e->getMessage(), 
+                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
+        }
     }
     
     /**
@@ -73,11 +90,21 @@ class AuthService
      */
     public function show()
     {
-        return ApiSendingResponse::sendingResponse([
-            'successMsg'=>'Successful operation',
-            'data'=>auth()->user(), 
-            'statusCode'=>Response::HTTP_OK
-        ]);
+        try{
+            $user = auth()->user();
+
+            return ApiSendingResponse::sendingResponse([
+                'successMsg'=> __('auth.show.successfulOperation'),
+                'data'=>$user, 
+                'statusCode'=>Response::HTTP_OK
+            ]);
+        }catch(\Exception $e){
+            return ApiSendingErrorException::sendingError([
+                'errNo'=>8,
+                'errMsg'=>$e->getMessage(), 
+                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
+        } 
     }
 
     /**
@@ -94,8 +121,8 @@ class AuthService
             $user = User::create($data);
 
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'User created successfully',
-                'data'=>User::find($user->user_id), 
+                'successMsg'=> __('auth.register.userWasSuccessfullyCreated'),
+                'data'=>$user,
                 'statusCode'=>Response::HTTP_CREATED
             ]);
         }catch(\Exception $e){
@@ -122,8 +149,8 @@ class AuthService
 
             if(!$user){
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('auth.update.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -139,8 +166,8 @@ class AuthService
             $user->save();
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'User updated successfully',
-                'data'=>$user, 
+                'successMsg'=> __('auth.update.userUpdatedSuccessfully'),
+                'data'=>$user,
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){

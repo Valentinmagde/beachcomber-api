@@ -50,6 +50,21 @@ class User extends Authenticatable implements JWTSubject
 		'user_id' => 'int'
 	];
 
+    protected $attributes = [
+        'user_id' => 0,
+		'user_type_id' => 0,
+        'user_group_id' => 0,
+        'user_surname' => 0,
+        'user_othername' => 0,
+        'user_email' => 0,
+        'user_jobtitle' => 'NA',
+        'user_phone' => '+230 601 9000',
+        'user_name' => 0,
+        'active' => 0,
+        'avatar' => null,
+        'deleted_at' => null
+    ];
+
 	protected $fillable = [
 		'user_id',
 		'user_type_id',

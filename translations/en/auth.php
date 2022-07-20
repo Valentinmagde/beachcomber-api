@@ -16,8 +16,28 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'invalidToken' => "Token is Invalid",
+    'expiredToken' => "Token is Expired",
+    'blacklistedToken' => "Token is Blacklisted",
+    'tokenNotFound' => "Authorization Token not found",
+    'theMethod' => "The method",
+    'isNotSupportedForThisRoute' => "is not supported for this route. Supported methods:",
+    'ressourceNotFound' => "Ressource not found",
 
     'login' => [
         "incorrectUserEmailOrPassword" => "Incorrect user email or password",
     ],
+    'register' => [
+        "userWasSuccessfullyCreated" => "User was successfully created",
+    ],
+    'show' => [
+        "successfulOperation" => "Successful operation"
+    ],
+    'update' => [
+        "userNotExist" => "This user does not exist",
+        "userUpdatedSuccessfully" => "User updated successfully"
+    ],
+    'logout' => [
+        "successfullyLoggedOut" => "Successfully logged out"
+    ]
 ];

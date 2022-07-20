@@ -220,14 +220,3 @@ Route::group(
         });
     }
 );
-
-/**
- * Endpoint for all roads that do not exist
- */
-Route::any('{any}', function(){
-    return ApiSendingErrorException::sendingError([
-        'errNo'=>7, 
-        'errMsg'=>'Resource not found', 
-        'statusCode'=>Response::HTTP_NOT_FOUND
-    ]);
-})->where('any', '.*');
