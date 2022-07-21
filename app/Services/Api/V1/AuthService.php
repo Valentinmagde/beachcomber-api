@@ -2,12 +2,15 @@
 
 namespace App\Services\Api\V1;
 
+use Throwable;
+use App\Exceptions\Handler;
 use Illuminate\Http\Response;
 use App\Models\Api\V1\User;
 use App\Http\Helpers\HelperFunctions;
 use App\Http\Resources\ApiSendingResponse;
 use App\Http\Resources\ApiSendingErrorException;
 use App\Http\Resources\ApiErrorNumbers;
+use Illuminate\Database\QueryException;
 
 class AuthService
 {
@@ -35,11 +38,7 @@ class AuthService
     
             return HelperFunctions::respondWithToken($token);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -57,11 +56,7 @@ class AuthService
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -75,11 +70,7 @@ class AuthService
         try{
             return HelperFunctions::respondWithToken(auth()->refresh());
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         }
     }
     
@@ -99,11 +90,7 @@ class AuthService
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8,
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -126,11 +113,7 @@ class AuthService
                 'statusCode'=>Response::HTTP_CREATED
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -171,11 +154,7 @@ class AuthService
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 }

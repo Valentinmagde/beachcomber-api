@@ -322,12 +322,11 @@ class AuthController extends Controller
     *            @OA\Schema(
     *               type="object",
     *               required={"user_surname"},
-    *               @OA\Property(property="user_id", type="integer", example="number"),
-    *                   @OA\Property(property="user_surname", type="string", example="string"),
-    *                   @OA\Property(property="user_othername", type="string", example="string"),
-    *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
-    *                   @OA\Property(property="user_phone", type="string", example="string"),
-    *                   @OA\Property(property="user_name", type="string", example="string"),
+    *               @OA\Property(property="user_surname", type="string", example="string"),
+    *               @OA\Property(property="user_othername", type="string", example="string"),
+    *               @OA\Property(property="user_jobtitle", type="string", example="string"),
+    *               @OA\Property(property="user_phone", type="string", example="string"),
+    *               @OA\Property(property="user_name", type="string", example="string"),
     *            ),
     *        ),
     *       @OA\MediaType(

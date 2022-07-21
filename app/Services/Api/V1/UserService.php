@@ -10,6 +10,8 @@ use App\Http\Resources\ApiSendingResponse;
 use App\Http\Resources\ApiSendingErrorException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\ApiErrorNumbers;
+use Illuminate\Database\QueryException;
 
 class UserService
 {   
@@ -31,22 +33,18 @@ class UserService
 
             if(!$user)
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found,
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             else
                 return ApiSendingResponse::sendingResponse([
-                    'successMsg'=>'Successful operation',
-                    'data'=>User::find($id), 
+                    'successMsg'=> __('user.successfulOperation'),
+                    'data'=>$user, 
                     'statusCode'=>Response::HTTP_OK
                 ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         }
     }
 
@@ -61,16 +59,12 @@ class UserService
             $users = User::all();
 
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'Successful operation',
+                'successMsg'=>__('user.successfulOperation'),
                 'data'=> $users, 
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         }
        
     }
@@ -90,8 +84,8 @@ class UserService
 
             if(!$group){
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This group does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.groupNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -99,16 +93,12 @@ class UserService
             $users = User::where('user_group_id', $groupId)->get();
 
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'Successful operation',
+                'successMsg'=> __('user.successfulOperation'),
                 'data'=> $users, 
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         }
     }
 
@@ -127,8 +117,8 @@ class UserService
 
             if(!$user){
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -148,16 +138,12 @@ class UserService
             $user->save();
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'Avatar uploaded successfully',
+                'successMsg'=> __('user.avatarUploadedSuccessfully'),
                 'data'=>$user, 
                 'statusCode'=>Response::HTTP_CREATED
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -176,8 +162,8 @@ class UserService
 
             if(!$user){
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -193,16 +179,12 @@ class UserService
             $user->save();
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'User updated successfully',
+                'successMsg'=> __('user.userUpdatedSuccessfully'),
                 'data'=>$user, 
                 'statusCode'=>Response::HTTP_CREATED
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -222,8 +204,8 @@ class UserService
             if(!$user)
             {
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -232,8 +214,8 @@ class UserService
 
                 if(!$group){
                     return ApiSendingErrorException::sendingError([
-                        'errNo'=>7, 
-                        'errMsg'=>'This group does not exist', 
+                        'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                        'errMsg'=> __('user.groupNotExist'), 
                         'statusCode'=>Response::HTTP_NOT_FOUND
                     ]);
                 }
@@ -243,16 +225,12 @@ class UserService
             }
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'Group assigned successfully',
+                'successMsg'=> __('user.groupAssignedSuccessfully'),
                 'data'=>$user, 
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -272,8 +250,8 @@ class UserService
             if(!$user)
             {
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -282,16 +260,16 @@ class UserService
 
                 if(!$group){
                     return ApiSendingErrorException::sendingError([
-                        'errNo'=>7, 
-                        'errMsg'=>'This group does not exist', 
+                        'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                        'errMsg'=> __('user.groupNotExist'),
                         'statusCode'=>Response::HTTP_NOT_FOUND
                     ]);
                 }
                 else{
                     if($user->user_group_id != $groupId)
                         return ApiSendingErrorException::sendingError([
-                            'errNo'=>7, 
-                            'errMsg'=>'This group is not assigned to this user', 
+                            'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                            'errMsg'=> __('user.groupNotAssignedToUser'), 
                             'statusCode'=>Response::HTTP_BAD_REQUEST
                         ]);
                 }
@@ -301,16 +279,12 @@ class UserService
             }
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'Group unassigned successfully',
+                'successMsg'=> __('user.groupUnassignedSuccessfully'),
                 'data'=>$user, 
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -329,8 +303,8 @@ class UserService
             if(!$user)
             {
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -339,16 +313,12 @@ class UserService
             $user->save();
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'User activated successfully',
+                'successMsg'=> __('user.userActivatedSuccessfully'),
                 'data'=>$user, 
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -367,8 +337,8 @@ class UserService
             if(!$user)
             {
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -377,16 +347,12 @@ class UserService
             $user->save();
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'User deactivated successfully',
+                'successMsg'=> __('user.userDeactivatedSuccessfully'),
                 'data'=>$user, 
                 'statusCode'=>Response::HTTP_OK
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8, 
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 
@@ -405,8 +371,8 @@ class UserService
             if(!$user)
             {
                 return ApiSendingErrorException::sendingError([
-                    'errNo'=>7, 
-                    'errMsg'=>'This user does not exist', 
+                    'errNo'=>ApiErrorNumbers::$resource_not_found, 
+                    'errMsg'=> __('user.userNotExist'), 
                     'statusCode'=>Response::HTTP_NOT_FOUND
                 ]);
             }
@@ -414,16 +380,12 @@ class UserService
             $user->delete();
             
             return ApiSendingResponse::sendingResponse([
-                'successMsg'=>'User deleted successfully',
+                'successMsg'=> __('user.userDeletedSuccessfully'),
                 'data'=>null, 
                 'statusCode'=>Response::HTTP_NO_CONTENT
             ]);
         }catch(\Exception $e){
-            return ApiSendingErrorException::sendingError([
-                'errNo'=>8,
-                'errMsg'=>$e->getMessage(), 
-                'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
+            return ApiSendingErrorException::formatError($e);
         } 
     }
 }

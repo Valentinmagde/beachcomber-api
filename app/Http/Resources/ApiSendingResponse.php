@@ -16,7 +16,7 @@ class ApiSendingResponse extends JsonResource
     {
         return response()->json([
                 'successMsg'  => $request['successMsg'],
-                'data' => $request['data']? array($request['data']): [],
+                'data' => $request['data']? $request['data']: null,
             ],
             $request['statusCode']
         );

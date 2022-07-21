@@ -23,6 +23,13 @@ return [
     'theMethod' => "The method",
     'isNotSupportedForThisRoute' => "is not supported for this route. Supported methods:",
     'ressourceNotFound' => "Ressource not found",
+    'cantConnectToLocalMySQL' => "Can't connect to local MySQL server",
+    'cantConnectToMySQLServer' => "Can't connect to MySQL server",
+    'unknownMySQLHost' => "Unknown MySQL server host",
+    'mySQLServerGoneAway' => "MySQL server has gone away",
+    'mySQLRanOutMemory' => "MySQL client ran out of memory",
+    'lostConnectionToMySQLQuery' => "Lost connection to MySQL server during query",
+    'unknownMySQLError' => "Unknown MySQL error",
 
     'login' => [
         "incorrectUserEmailOrPassword" => "Incorrect user email or password",

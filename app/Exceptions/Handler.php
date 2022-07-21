@@ -9,6 +9,7 @@ use Throwable;
 use Illuminate\Http\Response;
 use App\Http\Resources\ApiSendingErrorException;
 use App\Http\Resources\ApiErrorNumbers;
+use Illuminate\Database\QueryException;
 
 class Handler extends ExceptionHandler
 {
@@ -69,6 +70,68 @@ class Handler extends ExceptionHandler
                 'statusCode'=>Response::HTTP_NOT_FOUND
             ]);
         }
+
+        if($e instanceof QueryException){
+            switch($e->getCode())
+            {
+                case 2002:
+                    return ApiSendingErrorException::sendingError([
+                        'errNo'=> ApiErrorNumbers::$cr_connection_error, 
+                        'errMsg'=> __('auth.cantConnectToLocalMySQL'), 
+                        'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+                    ]);
+                    break;
+                
+                case 2003:
+                    return ApiSendingErrorException::sendingError([
+                        'errNo'=> ApiErrorNumbers::$cr_conn_host_error, 
+                        'errMsg'=> __('auth.cantConnectToMySQLServer'), 
+                        'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+                    ]);
+                    break;
+
+                case 2005:
+                    return ApiSendingErrorException::sendingError([
+                        'errNo'=> ApiErrorNumbers::$cr_unknown_host, 
+                        'errMsg'=> __('auth.unknownMySQLHost'), 
+                        'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+                    ]);
+                    break;
+                
+                case 2006:
+                    return ApiSendingErrorException::sendingError([
+                        'errNo'=> ApiErrorNumbers::$cr_server_gone_error, 
+                        'errMsg'=> __('auth.mySQLServerGoneAway'), 
+                        'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+                    ]);
+                    break;
+
+                case 2008:
+                    return ApiSendingErrorException::sendingError([
+                        'errNo'=> ApiErrorNumbers::$cr_out_of_memory, 
+                        'errMsg'=> __('auth.mySQLRanOutMemory'), 
+                        'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+                    ]);
+                    break;
+                
+                case 2013:
+                    return ApiSendingErrorException::sendingError([
+                        'errNo'=> ApiErrorNumbers::$cr_server_lost, 
+                        'errMsg'=> __('auth.lostConnectionToMySQLQuery'), 
+                        'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+                    ]);
+                    break;
+                
+                default:
+                    return ApiSendingErrorException::sendingError([
+                        'errNo'=> ApiErrorNumbers::$cr_unknown_error, 
+                        'errMsg'=> __('auth.unknownMySQLError'), 
+                        'statusCode'=>Response::HTTP_INTERNAL_SERVER_ERROR
+                    ]);
+                    break;
+            }
+        }
+
         return parent::render($request, $e);
     }
 }

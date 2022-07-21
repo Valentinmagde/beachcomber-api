@@ -29,23 +29,36 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Get all users",
      *      description="Returns all users",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Users successfully collects",
      *          @OA\JsonContent(
      *               @OA\Property(property="successMsg", type="string", example="string"),
-     *               @OA\Property(property="data", type="object",
-     *                   @OA\Property(property="user_id", type="integer", example="number"),
-     *                   @OA\Property(property="user_type_id", type="integer", example="number"),
-     *                   @OA\Property(property="user_group_id", type="integer", example="number"),
-     *                   @OA\Property(property="user_surname", type="string", example="string"),
-     *                   @OA\Property(property="user_othername", type="string", example="string"),
-     *                   @OA\Property(property="user_email", type="string", example="string"),
-     *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
-     *                   @OA\Property(property="user_phone", type="string", example="string"),
-     *                   @OA\Property(property="user_name", type="string", example="string"),
-     *                   @OA\Property(property="active", type="integer", example="number")
-     *               ),
+     *                @OA\Property(property="data", type="array",
+     *                    @OA\Items(
+     *                      @OA\Property(property="user", type="object",
+     *                        @OA\Property(property="user_id", type="integer", example="number"),
+     *                        @OA\Property(property="user_type_id", type="integer", example="number"),
+     *                        @OA\Property(property="user_group_id", type="integer", example="number"),
+     *                        @OA\Property(property="user_surname", type="string", example="string"),
+     *                        @OA\Property(property="user_othername", type="string", example="string"),
+     *                        @OA\Property(property="user_email", type="string", example="string"),
+     *                        @OA\Property(property="user_jobtitle", type="string", example="string"),
+     *                        @OA\Property(property="user_phone", type="string", example="string"),
+     *                        @OA\Property(property="user_name", type="string", example="string"),
+     *                        @OA\Property(property="active", type="integer", example="number")
+     *                      ),
+     *                    ),
+     *                ),
      *           )
      *       ),
      *       security={
@@ -91,8 +104,17 @@ class UserController extends Controller
      *      path="/api/v1/{lang}/users/group/{groupId}",
      *      operationId="showByGroupId",
      *      tags={"Users"},
-     *      summary="Get all users",
+     *      summary="Get all users by group id",
      *      description="Returns all users",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *       @OA\Parameter(
      *          name="groupId",
      *          in="path",
@@ -107,18 +129,22 @@ class UserController extends Controller
      *          description="Users successfully collects",
      *          @OA\JsonContent(
      *               @OA\Property(property="successMsg", type="string", example="string"),
-     *               @OA\Property(property="data", type="object",
-     *                   @OA\Property(property="user_id", type="integer", example="number"),
-     *                   @OA\Property(property="user_type_id", type="integer", example="number"),
-     *                   @OA\Property(property="user_group_id", type="integer", example="number"),
-     *                   @OA\Property(property="user_surname", type="string", example="string"),
-     *                   @OA\Property(property="user_othername", type="string", example="string"),
-     *                   @OA\Property(property="user_email", type="string", example="string"),
-     *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
-     *                   @OA\Property(property="user_phone", type="string", example="string"),
-     *                   @OA\Property(property="user_name", type="string", example="string"),
-     *                   @OA\Property(property="active", type="integer", example="number")
-     *               ),
+     *               @OA\Property(property="data", type="array",
+     *                    @OA\Items(
+     *                      @OA\Property(property="user", type="object",
+     *                        @OA\Property(property="user_id", type="integer", example="number"),
+     *                        @OA\Property(property="user_type_id", type="integer", example="number"),
+     *                        @OA\Property(property="user_group_id", type="integer", example="number"),
+     *                        @OA\Property(property="user_surname", type="string", example="string"),
+     *                        @OA\Property(property="user_othername", type="string", example="string"),
+     *                        @OA\Property(property="user_email", type="string", example="string"),
+     *                        @OA\Property(property="user_jobtitle", type="string", example="string"),
+     *                        @OA\Property(property="user_phone", type="string", example="string"),
+     *                        @OA\Property(property="user_name", type="string", example="string"),
+     *                        @OA\Property(property="active", type="integer", example="number")
+     *                      ),
+     *                    ),
+     *                ),
      *               
      *           )
      *       ),
@@ -156,7 +182,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showByGroupId($groupId)
+    public function showByGroupId($locale, $groupId)
     {
         return UserService::getAllByGroup($groupId);
     }
@@ -168,6 +194,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Get user by id",
      *      description="Get by is here",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="userId",
      *          in="path",
@@ -230,18 +265,27 @@ class UserController extends Controller
      * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function showById($userId)
+    public function showById($locale, $userId)
     {
         return UserService::getById($userId);
     }
 
-     /**
+    /**
      *   @OA\Post(
      *      path="/api/v1/{lang}/user/{userId}/avatar",
      *      operationId="uploadAvatar",
      *      tags={"Users"},
      *      summary="Upload Avatar",
      *      description="Upload Avatar",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="userId",
      *          in="path",
@@ -316,7 +360,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function uploadAvatar(Request $request, $userId)
+    public function uploadAvatar(Request $request, $locale, $userId)
     {
         $validator = Validator::make($request->all(), [
             'avatar' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
@@ -342,6 +386,15 @@ class UserController extends Controller
      *      summary="update user by id",
      *      description="update by is here",
      *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
      *          name="userId",
      *          in="path",
      *          required=true,
@@ -355,7 +408,7 @@ class UserController extends Controller
      *            mediaType="multipart/form-data",
      *            @OA\Schema(
      *               type="object",
-     *               required={"user_email", "user_surname"},
+     *               required={"user_surname"},
      *                @OA\Property(property="user_surname", type="string", example="string"),
      *                @OA\Property(property="user_othername", type="string", example="string"),
      *                @OA\Property(property="user_jobtitle", type="string", example="string"),
@@ -367,7 +420,7 @@ class UserController extends Controller
      *            mediaType="application/json",
      *            @OA\Schema(
      *               type="object",
-     *               required={"user_surname","user_email"},
+     *               required={"user_surname"},
      *                   @OA\Property(property="user_surname", type="string", example="string"),
      *                   @OA\Property(property="user_othername", type="string", example="string"),
      *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
@@ -429,10 +482,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $userId)
+    public function update(Request $request, $locale, $userId)
     {
         $validator = Validator::make($request->all(), [
-            'user_surname'                => 'required',
+            'user_surname' => 'required',
         ]);
     
         if ($validator->fails()) {
@@ -454,6 +507,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Assign group to a user",
      *      description="Assign group by is here",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="userId",
      *          in="path",
@@ -526,18 +588,27 @@ class UserController extends Controller
      * @param  int  $groupId
      * @return \Illuminate\Http\Response
      */
-    public function assignGroup($userId, $groupId)
+    public function assignGroup($locale, $userId, $groupId)
     {
         return UserService::assignGroup($userId, $groupId);
     }
 
-     /**
+    /**
      *   @OA\Get(
      *      path="/api/v1/{lang}/user/{userId}/group/{groupId}/unassign",
      *      operationId="unAssignGroup",
      *      tags={"Users"},
      *      summary="Unassign group to a user",
      *      description="Unassign group by is here",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="userId",
      *          in="path",
@@ -610,18 +681,27 @@ class UserController extends Controller
      * @param  int  $groupId
      * @return \Illuminate\Http\Response
      */
-    public function unAssignGroup($userId, $groupId)
+    public function unAssignGroup($locale, $userId, $groupId)
     {
         return UserService::unAssignGroup($userId, $groupId);
     }
 
-     /**
+    /**
      *   @OA\Get(
      *      path="/api/v1/{lang}/user/{userId}/activate",
      *      operationId="activate",
      *      tags={"Users"},
      *      summary="Activate a user",
      *      description="Activate by is here",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="userId",
      *          in="path",
@@ -683,18 +763,27 @@ class UserController extends Controller
      * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function activate($userId)
+    public function activate($locale, $userId)
     {
         return UserService::activate($userId);
     }
 
-     /**
+    /**
      *   @OA\Get(
      *      path="/api/v1/{lang}/user/{userId}/deactivate",
      *      operationId="deactivate",
      *      tags={"Users"},
      *      summary="Deactivate a user",
      *      description="Deactivate by is here",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="userId",
      *          in="path",
@@ -756,7 +845,7 @@ class UserController extends Controller
      * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function deactivate($userId)
+    public function deactivate($locale, $userId)
     {
         return UserService::deactivate($userId);
     }
@@ -768,6 +857,15 @@ class UserController extends Controller
      *      tags={"Users"},
      *      summary="Delete user",
      *      description="Delete user",
+     *      @OA\Parameter(
+     *          name="lang",
+     *          in="path",
+     *          required=true,
+     *          example="en",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="userId",
      *          in="path",
@@ -820,7 +918,7 @@ class UserController extends Controller
      * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function destroy($userId)
+    public function destroy($locale, $userId)
     {
         return UserService::destroy($userId);
     }
