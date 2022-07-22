@@ -316,34 +316,34 @@ class AuthController extends Controller
      *              type="string"
      *          )
      *      ),
-    *     @OA\RequestBody(
-    *         @OA\MediaType(
-    *            mediaType="multipart/form-data",
-    *            @OA\Schema(
-    *               type="object",
-    *               required={"user_surname"},
-    *               @OA\Property(property="user_surname", type="string", example="string"),
-    *               @OA\Property(property="user_othername", type="string", example="string"),
-    *               @OA\Property(property="user_jobtitle", type="string", example="string"),
-    *               @OA\Property(property="user_phone", type="string", example="string"),
-    *               @OA\Property(property="user_name", type="string", example="string"),
-    *            ),
-    *        ),
-    *       @OA\MediaType(
-    *            mediaType="application/json",
-    *            @OA\Schema(
-    *               type="object",
-    *               required={"user_surname"},
-    *                   @OA\Property(property="user_surname", type="string", example="string"),
-    *                   @OA\Property(property="user_othername", type="string", example="string"),
-    *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
-    *                   @OA\Property(property="user_phone", type="string", example="string"),
-    *                   @OA\Property(property="user_name", type="string", example="string")
-    *            ),
-    *        ),
-    *    ),
-    *   @OA\Response(
-    *          response=200,
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *            mediaType="multipart/form-data",
+     *            @OA\Schema(
+     *               type="object",
+     *               required={"user_surname"},
+     *               @OA\Property(property="user_surname", type="string", example="string"),
+     *               @OA\Property(property="user_othername", type="string", example="string"),
+     *               @OA\Property(property="user_jobtitle", type="string", example="string"),
+     *               @OA\Property(property="user_phone", type="string", example="string"),
+     *               @OA\Property(property="user_name", type="string", example="string"),
+     *            ),
+     *        ),
+     *       @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *               type="object",
+     *               required={"user_surname"},
+     *                   @OA\Property(property="user_surname", type="string", example="string"),
+     *                   @OA\Property(property="user_othername", type="string", example="string"),
+     *                   @OA\Property(property="user_jobtitle", type="string", example="string"),
+     *                   @OA\Property(property="user_phone", type="string", example="string"),
+     *                   @OA\Property(property="user_name", type="string", example="string")
+     *            ),
+     *        ),
+     *    ),
+     *   @OA\Response(
+     *          response=200,
     *          description="User updated successfully",
     *          @OA\JsonContent(
     *               @OA\Property(property="successMsg", type="string", example="string"),

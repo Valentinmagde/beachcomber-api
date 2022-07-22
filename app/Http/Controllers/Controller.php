@@ -43,6 +43,10 @@ use Illuminate\Routing\Controller as BaseController;
      *     name="Users",
      *     description="API Endpoints of User"
      * )
+     * @OA\Tag(
+     *     name="Hotels",
+     *     description="API Endpoints of Hotels"
+     * )
      */
 
 class Controller extends BaseController

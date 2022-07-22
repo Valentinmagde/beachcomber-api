@@ -218,5 +218,91 @@ Route::group(
                 $router->delete('/{userId}', 'UserController@destroy');
             });
         });
+
+        /*
+        |--------------------------------------------------------------------------
+        | API Routes of Hotel
+        |--------------------------------------------------------------------------
+        |
+        */
+        Route::group([], function () use ($router) {
+            Route::group(['prefix' => 'hotels'], function () use ($router) {
+                
+                /**
+                 * @OA\Get(
+                 *     path="/api/v1/{lang}/hotels",
+                 *     description="Get all hotels",
+                 *     @OA\Response(response="default", description="All hotels")
+                 * )
+                 */
+                $router->get('/', 'HotelController@index');
+
+                /**
+                 * @OA\Post(
+                 *     path="/api/v1/{lang}/hotels",
+                 *     description="Store a hotel",
+                 *     @OA\Response(response="default", description="Store Hotel")
+                 * )
+                 */
+                $router->post('/', 'HotelController@store');
+            });
+
+            Route::group(['prefix' => 'hotel'], function () use ($router) {
+                
+                /**
+                 * @OA\Get(
+                 *     path="/api/v1/{lang}/hotel/{hotelId}",
+                 *     description="Get hotel by id",
+                 *     @OA\Response(response="default", description="Hotel by id")
+                 * )
+                 */
+                $router->get('/{hotelId}', 'HotelController@showById');
+
+                /**
+                 * @OA\Post(
+                 *     path="/api/v1/{lang}/hotel/{hotelId}/image",
+                 *     description="Update hotel image",
+                 *     @OA\Response(response="default", description="Hotel image")
+                 * )
+                 */
+                $router->post('/{hotelId}/image', 'HotelController@uploadImage');
+
+                /**
+                 * @OA\Post(
+                 *     path="/api/v1/{lang}/hotel/{hotelId}/logo",
+                 *     description="Update hotel logo",
+                 *     @OA\Response(response="default", description="Hotel logo")
+                 * )
+                 */
+                $router->post('/{hotelId}/logo', 'HotelController@uploadLogo');
+
+                /**
+                 * @OA\Put(
+                 *     path="/api/v1/{lang}/hotel/{hotelId}",
+                 *     description="Update hotel",
+                 *     @OA\Response(response="default", description="Hotel update")
+                 * )
+                 */
+                $router->put('/{hotelId}', 'HotelController@update');
+
+                /**
+                 * @OA\Patch(
+                 *     path="/api/v1/{lang}/hotel/{hotelId}",
+                 *     description="Update hotel",
+                 *     @OA\Response(response="default", description="Hotel update")
+                 * )
+                 */
+                $router->patch('/{hotelId}', 'HotelController@update');
+
+                /**
+                 * @OA\Delete(
+                 *     path="/api/v1/{lang}/hotel/{hotelId}",
+                 *     description="Delete a hotel",
+                 *     @OA\Response(response="default", description="Delete hotel")
+                 * )
+                 */
+                $router->delete('/{hotelId}', 'HotelController@destroy');
+            });
+        });
     }
 );

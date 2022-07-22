@@ -9,6 +9,7 @@ use App\Services\Api\V1\UserService;
 use App\Http\Resources\ApiSendingErrorException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
+use App\Http\Resources\ApiErrorNumbers;
 
 class UserController extends Controller
 {
@@ -45,7 +46,6 @@ class UserController extends Controller
      *               @OA\Property(property="successMsg", type="string", example="string"),
      *                @OA\Property(property="data", type="array",
      *                    @OA\Items(
-     *                      @OA\Property(property="user", type="object",
      *                        @OA\Property(property="user_id", type="integer", example="number"),
      *                        @OA\Property(property="user_type_id", type="integer", example="number"),
      *                        @OA\Property(property="user_group_id", type="integer", example="number"),
@@ -56,7 +56,6 @@ class UserController extends Controller
      *                        @OA\Property(property="user_phone", type="string", example="string"),
      *                        @OA\Property(property="user_name", type="string", example="string"),
      *                        @OA\Property(property="active", type="integer", example="number")
-     *                      ),
      *                    ),
      *                ),
      *           )
@@ -193,7 +192,7 @@ class UserController extends Controller
      *      operationId="showById",
      *      tags={"Users"},
      *      summary="Get user by id",
-     *      description="Get by is here",
+     *      description="Get by id here",
      *      @OA\Parameter(
      *          name="lang",
      *          in="path",
@@ -369,7 +368,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             $error = implode(",", $validator->errors()->all());
             return ApiSendingErrorException::sendingError([
-                'errNo'=>1, 
+                'errNo'=>ApiErrorNumbers::$validator, 
                 'errMsg'=>$error, 
                 'statusCode'=>Response::HTTP_BAD_REQUEST
             ]);
@@ -384,7 +383,7 @@ class UserController extends Controller
      *      operationId="update",
      *      tags={"Users"},
      *      summary="update user by id",
-     *      description="update by is here",
+     *      description="update by id here",
      *      @OA\Parameter(
      *          name="lang",
      *          in="path",
@@ -433,7 +432,7 @@ class UserController extends Controller
      *         {"bearer": {}}
      *       },
      *      @OA\Response(
-     *          response=204,
+     *          response=200,
      *          description="User updated successfully",
      *          @OA\JsonContent(
      *               @OA\Property(property="successMsg", type="string", example="string"),
@@ -491,7 +490,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             $error = implode(",", $validator->errors()->all());
             return ApiSendingErrorException::sendingError([
-                'errNo'=>1, 
+                'errNo'=>ApiErrorNumbers::$validator, 
                 'errMsg'=>$error, 
                 'statusCode'=>Response::HTTP_BAD_REQUEST
             ]);
@@ -884,9 +883,7 @@ class UserController extends Controller
      *          @OA\JsonContent(
      *               @OA\Property(property="successMsg", type="string", example="string"),
      *               @OA\Property(property="data", type="object", example="null")
-     *               ),
-     *               
-     *           )
+     *          ),
      *       ),
      *       @OA\Response(
      *           response=400, 
